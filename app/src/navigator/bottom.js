@@ -13,13 +13,15 @@ import Reservation from '../components/AppTabs/Scheduler';
 
 const Tab = createBottomTabNavigator();
 
+const size = 26;
+
 export default function BottomBar() {
   return (
     <Tab.Navigator
       activeColor={ogreen}
       screenOptions={{
         headerShown: false,
-        tabBarShowLabel: false,
+
         showIcon: true,
         tabBarActiveTintColor: ogreen,
         tabBarInactiveTintColor: '#d1cece',
@@ -31,20 +33,30 @@ export default function BottomBar() {
         },
       }}>
       <Tab.Screen
-        name="HomeMain"
+        name="heart"
         component={Home}
         options={{
           tabBarIcon: ({color}) => (
-            <FIcon name="home" color={color} size={26} />
+            <MIcon name="heart" color={color} size={size} />
           ),
         }}
       />
       <Tab.Screen
-        name="Settings"
+        name="HomeMain"
+        component={Home}
+        options={{
+          tabBarIcon: ({color}) => (
+            <MIcon name="home" color={color} size={size} />
+          ),
+          tabBarLabel: 'Home',
+        }}
+      />
+      <Tab.Screen
+        name="MyPage"
         component={Profile}
         options={{
           tabBarIcon: ({color}) => (
-            <MIcon name="account" color={color} size={26} />
+            <MIcon name="account" color={color} size={size} />
           ),
         }}
       />
