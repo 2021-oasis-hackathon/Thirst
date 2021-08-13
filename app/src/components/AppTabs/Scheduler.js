@@ -58,50 +58,31 @@ LocaleConfig.defaultLocale = 'kr';
 const getMonthData = () => {
   let loadingData = true;
   let dataToReturn = {
-    '2021-08-13': [
-      [
-        {
-          time: 1,
-          remain: 4,
-          total: 7,
-        },
-        {
-          time: 2,
-          remain: 7,
-          total: 7,
-        },
-        {
-          time: 3,
-          remain: 0,
-          total: 7,
-        },
-        {
-          time: 5,
-          remain: 0,
-          total: 7,
-        },
-        {
-          time: 7,
-          remain: 0,
-          total: 7,
-        },
-      ],
-    ],
     '2021-08-14': [
       [
         {
-          time: 1,
+          time: '09:00',
           remain: 4,
           total: 7,
         },
         {
-          time: 2,
+          time: '11:00',
           remain: 7,
           total: 7,
         },
         {
-          time: 3,
+          time: '13:00',
           remain: 0,
+          total: 7,
+        },
+        {
+          time: '15:00',
+          remain: 4,
+          total: 7,
+        },
+        {
+          time: '17:00',
+          remain: 7,
           total: 7,
         },
       ],
@@ -109,93 +90,101 @@ const getMonthData = () => {
     '2021-08-15': [
       [
         {
-          time: 1,
+          time: '09:00',
           remain: 4,
           total: 7,
         },
         {
-          time: 2,
+          time: '11:00',
           remain: 7,
           total: 7,
         },
         {
-          time: 3,
+          time: '17:00',
+          remain: 0,
+          total: 7,
+        },
+        {
+          time: '19:00',
           remain: 0,
           total: 7,
         },
       ],
     ],
+    '2021-08-16': [],
+    '2021-08-17': [],
     '2021-08-18': [
       [
         {
-          time: 1,
+          time: '09:00',
           remain: 4,
           total: 7,
         },
         {
-          time: 2,
+          time: '11:00',
           remain: 7,
           total: 7,
         },
         {
-          time: 3,
+          time: '17:00',
           remain: 0,
           total: 7,
         },
       ],
     ],
-    '2021-08-23': [
+    '2021-08-19': [],
+    '2021-08-20': [
       [
         {
-          time: 1,
+          time: '09:00',
           remain: 4,
           total: 7,
         },
         {
-          time: 2,
+          time: '11:00',
           remain: 7,
           total: 7,
         },
         {
-          time: 3,
+          time: '17:00',
           remain: 0,
           total: 7,
         },
       ],
     ],
-    '2021-08-24': [
+    '2021-08-21': [
       [
         {
-          time: 1,
+          time: '09:00',
           remain: 4,
           total: 7,
         },
         {
-          time: 2,
+          time: '11:00',
           remain: 7,
           total: 7,
         },
         {
-          time: 3,
+          time: '17:00',
           remain: 0,
           total: 7,
         },
       ],
     ],
-    '2021-08-25': [
+    '2021-08-22': [
       [
         {
-          time: 1,
+          time: '09:00',
           remain: 4,
           total: 7,
         },
         {
-          time: 2,
+          time: '11:00',
           remain: 7,
           total: 7,
         },
         {
-          time: 3,
+          time: '17:00',
           remain: 0,
           total: 7,
         },
@@ -209,26 +198,28 @@ function Scheduler({navigation, info}) {
   const [monthData, loadingData] = getMonthData();
 
   const renderItem = (item, day) => {
-    return item.map((i, index) => {
-      console.log(i);
-      return (
-        <TouchableOpacity
-          style={styles.item}
-          key={`${day}-${index}`}
-          onPress={() => {
-            navigation.navigate('Reservation', {
-              name: 'test',
-              time: i.time,
-              date: day,
-            });
-          }}>
-          <Text style={styles.itemTime}>{i.time}시</Text>
-          <Text style={styles.itemPerson}>
-            {i.remain}/{i.total}
-          </Text>
-        </TouchableOpacity>
-      );
-    });
+    if (item)
+      return item.map((i, index) => {
+        console.log(i);
+        return (
+          <TouchableOpacity
+            style={styles.item}
+            key={`${day}-${index}`}
+            onPress={() => {
+              navigation.navigate('Reservation', {
+                name: 'test',
+                time: i.time,
+                date: day,
+              });
+            }}>
+            <Text style={styles.itemTime}>{i.time}</Text>
+            <Text style={styles.itemPerson}>
+              {i.remain}/{i.total}
+            </Text>
+          </TouchableOpacity>
+        );
+      });
+    else return <Text>휴일입니다!</Text>;
   };
 
   if (loadingData || !monthData)
@@ -247,9 +238,11 @@ function Scheduler({navigation, info}) {
             if (day !== undefined)
               return (
                 <View style={[styles.day, styles.row]}>
-                  <Text style={styles.date}>
-                    {day.month}/{day.day}
-                  </Text>
+                  <View style={styles.dateView}>
+                    <Text style={styles.date}>
+                      {day.month}/{day.day}
+                    </Text>
+                  </View>
                   <View style={[styles.items, styles.row]}>
                     {renderItem(item, `${day.month}/${day.day}`)}
                   </View>
@@ -263,14 +256,21 @@ function Scheduler({navigation, info}) {
           // Callback that fires when the calendar is opened or closed
           onCalendarToggled={calendarOpened => {
             console.log(calendarOpened);
+            return <View></View>;
           }}
           // Callback that gets called on day press
           onDayPress={day => {
             console.log('day pressed');
+            return (
+              <View>
+                <Text>Pressed</Text>
+              </View>
+            );
           }}
           // Callback that gets called when day changes while scrolling agenda list
           onDayChange={day => {
             console.log('day changed');
+            return <View></View>;
           }}
           // Initially selected day
           selected={new Date()}
@@ -285,11 +285,7 @@ function Scheduler({navigation, info}) {
 
           // Specify how empty date content with no items should be rendered
           renderEmptyDate={() => {
-            return (
-              <View>
-                <Text>OFF ! </Text>
-              </View>
-            );
+            return <View />;
           }}
           // Specify how agenda knob should look like
           renderKnob={() => {
@@ -308,21 +304,14 @@ function Scheduler({navigation, info}) {
           // Agenda theme
           theme={{
             arrowColor: 'white',
-            'stylesheet.calendar.header': {
-              week: {
-                marginTop: 5,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              },
-            },
-            backgroundColor: '#E9E9E9',
-            calendarBackground: 'white',
-            textSectionTitleColor: '#b6c1cd',
-            selectedDayBackgroundColor: '#00adf5',
-            selectedDayTextColor: '#ffffff',
+            backgroundColor: 'white',
+            calendarBackground: '#94AF23',
+            textSectionTitleColor: 'white',
+            selectedDayBackgroundColor: 'white',
+            selectedDayTextColor: '#94AF23',
             todayTextColor: '#00adf5',
-            dayTextColor: 'black',
-            textDisabledColor: '#d9e1e8',
+            dayTextColor: 'white',
+            textDisabledColor: 'rgba(0, 0, 0, 0.1)',
             dotColor: '#00adf5',
             selectedDotColor: '#ffffff',
             arrowColor: 'orange',
@@ -334,11 +323,12 @@ function Scheduler({navigation, info}) {
             textDayFontSize: 16,
             textMonthFontSize: 16,
             textDayHeaderFontSize: 16,
-            agendaDayTextColor: 'black',
-            agendaDayNumColor: 'green',
+            textDayFontFamily: bold,
+            agendaDayTextColor: '#94AF23',
+            agendaDayNumColor: '#94AF23',
             agendaTodayColor: 'green',
             agendaKnobColor: 'green',
-            selectedDayBackgroundColor: 'green',
+            'stylesheet.agenda.list': {container: {paddingBottom: 10}},
           }}
           // Agenda container style
           style={{}}
@@ -365,16 +355,17 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginRight: 10,
     flexWrap: 'wrap',
+    marginLeft: 20,
   },
   item: {
-    width: width / 5,
-    backgroundColor: '#94af23',
+    width: width / 4.5,
+    borderColor: '#94af23',
+    backgroundColor: 'white',
+    borderWidth: 1,
     display: 'flex',
     flexDirection: 'column',
-    margin: 5,
+    marginBottom: 5,
     height: 'auto',
-    borderRadius: 5,
-
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -382,20 +373,16 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5,
   },
   itemTime: {
     fontSize: 15,
-    color: 'white',
+    color: '#3D550C',
     textAlign: 'center',
   },
   itemPerson: {
-    color: 'white',
+    color: '#94AF23',
     textAlign: 'center',
-  },
-  agenda: {
-    marginTop: 10,
-    backgroundColor: 'red',
+    fontSize: 11,
   },
   button: {
     backgroundColor: lgreen,
@@ -408,15 +395,21 @@ const styles = StyleSheet.create({
   },
   day: {
     width: width - 20,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.01)',
-    marginTop: 10,
+    paddingVertical: 10,
+    backgroundColor: 'white',
+    marginVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E1E1E1',
   },
   date: {
     margin: 15,
     fontSize: 20,
     fontFamily: bold,
+    color: '#6D6D6D',
+  },
+  dateView: {
+    borderRightColor: '#ABA730',
+    borderRightWidth: 1,
   },
   Knob: {
     width: 60,

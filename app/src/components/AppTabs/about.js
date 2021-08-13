@@ -1,29 +1,20 @@
-
 import React from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity
-} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 
-import { DrawerActions } from '@react-navigation/native';
+import {DrawerActions} from '@react-navigation/native';
 
-
-function About(props){
+function About(props) {
   return (
     <View style={styles.container}>
-        <TouchableOpacity
-      onPress={() =>props.navigation.dispatch(DrawerActions.toggleDrawer())}>
-      <Text>메뉴열기</Text>
-    </TouchableOpacity>
-
+      <TouchableOpacity
+        onPress={() => props.navigation.dispatch(DrawerActions.toggleDrawer())}>
+        <Text>메뉴열기</Text>
+      </TouchableOpacity>
     </View>
-  )
+  );
 }
 
-
-export default Home;
+export default About;
 
 const styles = StyleSheet.create({
   container: {
