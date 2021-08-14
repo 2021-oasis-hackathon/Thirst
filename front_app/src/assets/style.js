@@ -30,6 +30,25 @@ const style = {
     width: 30,
     height: 29,
   },
+  header: {
+    width: width,
+    marginBottom: 5,
+    borderBottomColor: '#E9E9E9',
+    borderBottomWidth: 1,
+    padding: 10,
+  },
+  title: {
+    fontFamily: bold,
+    fontSize: 22,
+    marginVertical: 5,
+    color: lgreen,
+    marginLeft: 10,
+  },
+  between: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
 };
 
 export default style;
