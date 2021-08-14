@@ -1,20 +1,32 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet, Image, Dimensions} from 'react-native';
+import {ogreen} from '../../assets/color';
 
-import {plane} from '../../assets/font';
-
+import {bold, plane} from '../../assets/font';
+import style from '../../assets/style';
 const {width, height} = Dimensions.get('window');
-function Review({name, comments, date, img}) {
+function Review({name, comments, date, img, satisfaction}) {
+  const [heart, setHeart] = useState('');
+  const makeHeart = () => {
+    let str = '';
+    for (let i = 0; i < satisfaction; i++) str += '💚';
+    setHeart(str);
+  };
+
+  useEffect(() => {
+    makeHeart();
+  }, []);
   return (
     <View style={styles.Review}>
       <View style={styles.between}>
         <Text style={styles.name}>작성자 {name}</Text>
         <Text style={styles.date}>{date}</Text>
       </View>
-      <View style={[styles.row]}>
+      <View style={[style.row]}>
         {img && <Image style={styles.img} source={{uri: img}} />}
         <View style={styles.wrap}>
           <Text style={styles.comments}>{comments}</Text>
+          <Text style={[styles.comments, styles.satis]}> 만족도 {heart}</Text>
         </View>
       </View>
     </View>
@@ -31,10 +43,6 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     marginBottom: 2,
     padding: 12,
-  },
-  row: {
-    display: 'flex',
-    flexDirection: 'row',
   },
   wrap: {
     flexWrap: 'wrap',
@@ -62,9 +70,8 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginTop: 10,
   },
-  between: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  satis: {
+    fontFamily: bold,
+    color: ogreen,
   },
 });
