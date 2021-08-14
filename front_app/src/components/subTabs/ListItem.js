@@ -20,7 +20,7 @@ function ListItem({navigation, info}) {
     <View style={styles.container}>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('detail', {info});
+          navigation.navigate('Detail', {info});
         }}>
         <View style={style.row}>
           <Image source={{uri: info.img}} style={styles.img} />

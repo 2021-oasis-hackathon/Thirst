@@ -5,6 +5,7 @@ import {ogreen} from '../../assets/color';
 import {bold, plane} from '../../assets/font';
 import style from '../../assets/style';
 const {width, height} = Dimensions.get('window');
+
 function Review({name, comments, date, img, satisfaction}) {
   const [heart, setHeart] = useState('');
   const makeHeart = () => {
@@ -18,7 +19,7 @@ function Review({name, comments, date, img, satisfaction}) {
   }, []);
   return (
     <View style={styles.Review}>
-      <View style={styles.between}>
+      <View style={style.between}>
         <Text style={styles.name}>작성자 {name}</Text>
         <Text style={styles.date}>{date}</Text>
       </View>
@@ -47,7 +48,6 @@ const styles = StyleSheet.create({
   wrap: {
     flexWrap: 'wrap',
     width: width / 1.8,
-
     alignItems: 'flex-start',
   },
   name: {
