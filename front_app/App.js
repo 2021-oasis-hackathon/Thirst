@@ -21,7 +21,7 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function App() {
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {}, []);
 
@@ -38,6 +38,7 @@ export default function App() {
             }}>
             <Stack.Screen name="Main" component={DrawerBar} />
             <Stack.Screen name="Detail" component={Detail} />
+            <Stack.Screen name="Scheduler" component={Scheduler} />
             <Stack.Screen name="Reservation" component={Reservation} />
           </Stack.Navigator>
         </NavigationContainer>

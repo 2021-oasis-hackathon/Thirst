@@ -16,9 +16,11 @@ import {bold} from '../assets/font';
 import Reservation from '../components/AppTabs/Reservation';
 import Scheduler from '../components/AppTabs/Scheduler';
 import Today from '../components/AppTabs/Today';
-import {ogreen} from '../assets/color';
+import {lgreen, ogreen} from '../assets/color';
 import Profile from '../components/AppTabs/Profile';
 import List from '../components/AppTabs/list';
+import Logo from '../components/subTabs/Logo';
+
 const Drawer = createDrawerNavigator();
 
 export default function DrawerBar({navigation, props}) {
@@ -27,8 +29,11 @@ export default function DrawerBar({navigation, props}) {
   return (
     <Drawer.Navigator
       screenOptions={{
+        drawerActiveBackgroundColor: lgreen,
+        drawerActiveTintColor: 'white',
         drawerStyle: {
           backgroundColor: 'white',
+
           width: 240,
         },
         headerShown: true,
@@ -36,42 +41,29 @@ export default function DrawerBar({navigation, props}) {
       <Drawer.Screen
         name="Home"
         options={{
-          headerTitle: () => (
-            <View style={{display: 'flex', flexDirection: 'row'}}>
-              <Text style={{fontFamily: bold, fontSize: 20, color: 'green'}}>
-                촌
-              </Text>
-              <Text style={{fontFamily: bold, fontSize: 20}}>스러운</Text>
-            </View>
-          ),
+          headerTitle: () => <Logo />,
         }}
         component={BottomBar}
       />
       <Drawer.Screen
+        drawerHideStatusBarOnOpen="true"
         name="list"
         options={{
-          headerTitle: () => (
-            <Text style={{fontFamily: bold, fontSize: 20}}>체험 상세</Text>
-          ),
+          drawerLabel: 'none',
+          headerTitle: () => <Logo />,
         }}
         component={List}
       />
       <Drawer.Screen
-        name="Reservation"
-        options={{
-          headerTitle: () => (
-            <Text style={{fontFamily: bold, fontSize: 20}}>예약 신청</Text>
-          ),
-        }}
-        component={Reservation}
+        name="scheduler"
+        options={{drawerLabel: 'none', headerTitle: () => <Logo />}}
+        component={Scheduler}
       />
-      <Drawer.Screen name="scheduler" component={Scheduler} />
       <Drawer.Screen
         name="Today"
         options={{
-          headerTitle: () => (
-            <Text style={{fontFamily: bold, fontSize: 20}}>오늘의 발견</Text>
-          ),
+          drawerLabel: '오늘의 발견',
+          headerTitle: () => <Logo />,
         }}
         component={Today}
       />
