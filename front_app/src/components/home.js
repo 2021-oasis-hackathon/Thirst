@@ -54,10 +54,18 @@ function Home(props) {
       </View>
       {select == 2 ? (
         <Gwangju navigation={props.navigation} />
+      ) : select == 1 ? (
+        <Image
+          style={styles.map}
+          resizeMode="stretch"
+          source={require('../assets/전북.png')}
+        />
       ) : (
-        <View>
-          <Text>다른곳</Text>
-        </View>
+        <Image
+          style={styles.map}
+          resizeMode="stretch"
+          source={require('../assets/전남.png')}
+        />
       )}
       <TodaysReview navigation={props.navigation} />
     </View>
@@ -71,6 +79,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: 'white',
+  },
+  map: {
+    width: width - 70,
+    height: height / 2.5,
+    marginBottom: 10,
   },
   row: {
     display: 'flex',
