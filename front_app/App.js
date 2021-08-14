@@ -36,7 +36,7 @@ export default function App() {
               headerTintColor: 'white',
               headerStyle: {backgroundColor: 'tomato'},
             }}>
-            <Stack.Screen name="Main" component={BottomBar} />
+            <Stack.Screen name="Main" component={DrawerBar} />
             <Stack.Screen name="Detail" component={Detail} />
             <Stack.Screen name="Reservation" component={Reservation} />
           </Stack.Navigator>

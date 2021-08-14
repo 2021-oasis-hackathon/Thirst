@@ -18,6 +18,7 @@ import Scheduler from '../components/AppTabs/Scheduler';
 import Today from '../components/AppTabs/Today';
 import {ogreen} from '../assets/color';
 import Profile from '../components/AppTabs/Profile';
+import List from '../components/AppTabs/list';
 const Drawer = createDrawerNavigator();
 
 export default function DrawerBar({navigation, props}) {
@@ -30,7 +31,7 @@ export default function DrawerBar({navigation, props}) {
           backgroundColor: 'white',
           width: 240,
         },
-        headerShown: 'none',
+        headerShown: true,
       }}>
       <Drawer.Screen
         name="Home"
@@ -44,16 +45,16 @@ export default function DrawerBar({navigation, props}) {
             </View>
           ),
         }}
-        component={Home}
+        component={BottomBar}
       />
       <Drawer.Screen
-        name="menu3"
+        name="list"
         options={{
           headerTitle: () => (
             <Text style={{fontFamily: bold, fontSize: 20}}>체험 상세</Text>
           ),
         }}
-        component={Detail}
+        component={List}
       />
       <Drawer.Screen
         name="Reservation"

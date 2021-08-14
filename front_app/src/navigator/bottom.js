@@ -45,7 +45,7 @@ export default function BottomBar() {
           tabBarIcon: ({color}) => (
             <OIcon name="book" color={color} size={size} />
           ),
-          headerShown: true,
+          headerShown: false,
           headerTitle: () => (
             <View style={style.navView}>
               <Text style={style.navText}>예약 현황</Text>
@@ -55,7 +55,7 @@ export default function BottomBar() {
       />
       <Tab.Screen
         name="HomeMain"
-        component={DrawerBar}
+        component={Home}
         options={{
           tabBarIcon: ({color}) => (
             <OIcon name="home" color={color} size={size} />
@@ -69,7 +69,7 @@ export default function BottomBar() {
           tabBarIcon: ({color}) => (
             <AIcon name="user" color={color} size={size} />
           ),
-          headerShown: true,
+          headerShown: false,
           headerTitle: () => (
             <View style={style.navView}>
               <Text style={style.navText}>My Page</Text>
