@@ -1,3 +1,4 @@
+import {useRoute} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {
   Text,
@@ -35,9 +36,7 @@ const data = [
   },
 ];
 function List({navigation, route}) {
-  useEffect(() => {
-    console.log(route.params);
-  }, []);
+  useEffect(() => {}, []);
   return (
     <View style={styles.container}>
       <View style={[style.row, style.header]}>

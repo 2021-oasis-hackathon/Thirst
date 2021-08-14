@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Text,
   View,
@@ -9,17 +9,21 @@ import {
   Image,
 } from 'react-native';
 
-import {Avatar, Card, Button, Title, Paragraph} from 'react-native-paper';
 import {lgreen, lighter, ogreen} from '../../assets/color';
 import {bold} from '../../assets/font';
 import Review from '../subTabs/Review';
+
 import style from '../../assets/style';
 
 const {width, height} = Dimensions.get('window');
 
 const test = [0, 0, 0, 0, 0, 0];
 
-function Detail({navigation}) {
+function Detail({navigation, route}) {
+  useEffect(() => {
+    console.log(navigation);
+  }, []);
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.ScrollView}>
@@ -51,8 +55,8 @@ function Detail({navigation}) {
                 <Text style={styles.desc}> 연락처 </Text>
               </View>
               <View style={styles.column}>
-                <Text style={styles.desc}> 8/12~10/31 </Text>
-                <Text style={styles.desc}> 농가 마을</Text>
+                <Text style={styles.desc}> {route.params.info.period} </Text>
+                <Text style={styles.desc}> {route.params.info.location} </Text>
                 <Text style={styles.desc}> 010-0000-0000</Text>
               </View>
             </View>
@@ -73,7 +77,7 @@ function Detail({navigation}) {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              navigation.navigate('Reservation');
+              navigation.navigate('Scheduler');
             }}>
             <Text style={styles.buttonText}>예약하기</Text>
           </TouchableOpacity>

@@ -15,6 +15,7 @@ import {bold, plane} from '../../assets/font';
 import {RadioButton} from 'react-native-paper';
 import AlertModal from '../subTabs/Modal';
 import style from '../../assets/style';
+import Logo from '../subTabs/Logo';
 
 const {width, height} = Dimensions.get('window');
 
@@ -31,23 +32,29 @@ function Reservation({navigation, route}) {
   }, []);
 
   const onSubmit = () => {
-    if (num > route.params.remain) modal.visible = true;
-    else {
-    }
+    // if (num > route.params.remain) modal.visible = true;
+    // else {
+    // }
+    navigation.navigate('MyReservation');
   };
 
   return (
     <View style={styles.container}>
-      <AlertModal ref={modal} visible={false} />
-      <View style={[styles.row, styles.header]}>
+      <AlertModal visible={false} />
+      <Logo style={{marginBottom: 10, marginTop: 15, width: 100, height: 45}} />
+      <View
+        style={[
+          style.row,
+          {alignItems: 'flex-start', width: width - 50, marginTop: 15},
+        ]}>
         <Image
           source={require('../../assets/bori.png')}
           style={[style.icon, {marginLeft: 15}]}
         />
-        <Text style={styles.title}> 신청자 정보 </Text>
+        <Text style={[style.title, {fontSize: 20}]}> 신청자 정보 </Text>
       </View>
-      <View>
-        <View style={[styles.section, styles.row]}>
+      <View style={{alignItems: 'center'}}>
+        <View style={[styles.section, style.row]}>
           <View style={[styles.column, styles.part]}>
             <Text style={styles.text}>이름</Text>
             <Text style={styles.text}>핸드폰</Text>
@@ -57,15 +64,15 @@ function Reservation({navigation, route}) {
             <Text style={styles.text}>010-0000-0000</Text>
           </View>
         </View>
-        <View style={[styles.section, styles.row]}>
-          <View style={[styles.column, styles.part]}>
+        <View style={[styles.section, style.row]}>
+          <View style={[style.column, styles.part]}>
             <Text style={styles.text}>체험장</Text>
             <Text style={styles.text}>예약 일자</Text>
             <Text style={styles.text}>예약 시간</Text>
             <Text style={styles.text}>예약자 수</Text>
             <Text style={styles.text}>가격</Text>
           </View>
-          <View style={styles.column}>
+          <View style={style.column}>
             <Text style={styles.text}> {route.params.name}</Text>
             <Text style={styles.text}> {route.params.date}</Text>
             <Text style={styles.text}> {route.params.time}</Text>
@@ -106,7 +113,7 @@ function Reservation({navigation, route}) {
             <Text style={styles.text}>{price}</Text>
           </View>
         </View>
-        <View style={[styles.section, styles.row]}>
+        <View style={[styles.section, style.row]}>
           <Text
             style={[
               styles.part,
@@ -118,8 +125,8 @@ function Reservation({navigation, route}) {
             ]}>
             결제 수단
           </Text>
-          <View style={[styles.column, {}]}>
-            <View style={styles.row}>
+          <View style={[style.column, {}]}>
+            <View style={style.row}>
               <RadioButton
                 color={ogreen}
                 value="card"
@@ -128,7 +135,7 @@ function Reservation({navigation, route}) {
               />
               <Text style={styles.radioText}>카드 결제</Text>
             </View>
-            <View style={styles.row}>
+            <View style={style.row}>
               <RadioButton
                 color={ogreen}
                 value="account"
@@ -137,7 +144,7 @@ function Reservation({navigation, route}) {
               />
               <Text style={styles.radioText}>무통장 입금</Text>
             </View>
-            <View style={styles.row}>
+            <View style={style.row}>
               <RadioButton
                 color={ogreen}
                 value="phone"
@@ -146,7 +153,7 @@ function Reservation({navigation, route}) {
               />
               <Text style={styles.radioText}>핸드폰 결제</Text>
             </View>
-            <View style={styles.row}>
+            <View style={style.row}>
               <RadioButton
                 color={ogreen}
                 value="point"
@@ -156,7 +163,7 @@ function Reservation({navigation, route}) {
               <Text style={styles.radioText}>충전 금액 사용</Text>
             </View>
             <View style={styles.point}>
-              <Text>10,000</Text>
+              <Text style={{right: 5}}>10,000</Text>
             </View>
           </View>
         </View>
@@ -177,35 +184,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
   },
-  header: {
-    width: width,
-    marginBottom: 5,
-    borderBottomColor: '#E9E9E9',
-    borderBottomWidth: 1,
-    padding: 10,
-  },
-  row: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  column: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  title: {
-    fontFamily: bold,
-    fontSize: 25,
-    marginVertical: 5,
-    color: lgreen,
-  },
   section: {
     borderBottomColor: lgreen,
     borderBottomWidth: 1,
     width: width - 60,
-    padding: 20,
+    padding: 10,
+    marginBottom: 10,
   },
   part: {
-    width: width / 3,
+    width: width / 3.2,
   },
   inputContainer: {
     backgroundColor: '#F5F5F5',

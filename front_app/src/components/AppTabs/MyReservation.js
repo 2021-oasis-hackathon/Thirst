@@ -1,14 +1,22 @@
 import React from 'react';
-import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+} from 'react-native';
+import style from '../../assets/style';
+
+const {width, height} = Dimensions.get('window');
 
 function MyReservation(props) {
   return (
     <View style={styles.container}>
-      <View>
-        <Text>사용자정보?</Text>
-      </View>
-      <View>
-        <Text>예약현황?</Text>
+      <View style={[style.row, styles.section]}>
+        <Image source={require('../../assets/bori.png')} style={style.icon} />
+        <Text style={styles.title}>내 예약 현황</Text>
       </View>
     </View>
   );
@@ -20,6 +28,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: 'white',
+  },
+  section: {},
+  day: {
+    width: width - 20,
+    paddingVertical: 10,
+    backgroundColor: 'white',
+    marginVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E1E1E1',
+  },
+  title: {
+    fontSize: 20,
   },
 });

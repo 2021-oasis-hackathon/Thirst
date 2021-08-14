@@ -41,7 +41,18 @@ function Profile(props) {
           <Image style={style.icon} source={require('../../assets/bori.png')} />
           <Text style={styles.couponText}>내 쿠폰</Text>
         </View>
-        <View style={[styles.section, styles.coupons]}></View>
+        <View style={[styles.section, styles.coupons]}>
+          <Image
+            resizeMode="stretch"
+            source={require('../../assets/coupon.png')}
+            style={styles.couponImg}
+          />
+          <Image
+            resizeMode="stretch"
+            source={require('../../assets/coupon.png')}
+            style={styles.couponImg}
+          />
+        </View>
       </View>
       <TouchableOpacity style={styles.logout}>
         <Text style={styles.logoutText}> 로그아웃</Text>
@@ -119,6 +130,8 @@ const styles = StyleSheet.create({
   },
   coupons: {
     height: height / 4,
+    alignItems: 'center',
+    width: width - 50,
   },
   couponText: {
     fontSize: 17,
@@ -136,5 +149,10 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontFamily: bold,
+  },
+  couponImg: {
+    width: width - 80,
+    height: 80,
+    marginBottom: 5,
   },
 });
