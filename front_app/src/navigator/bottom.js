@@ -10,6 +10,11 @@ import {ogreen, lgreen} from '../assets/color';
 import Profile from '../components/AppTabs/Profile';
 
 import Reservation from '../components/AppTabs/Scheduler';
+import DrawerBar from './drawbar';
+import MyReservation from '../components/AppTabs/MyReservation';
+import {bold} from '../assets/font';
+import {Text, View, Dimensions} from 'react-native';
+import style from '../assets/style';
 
 const Tab = createBottomTabNavigator();
 
@@ -18,6 +23,7 @@ const size = 26;
 export default function BottomBar() {
   return (
     <Tab.Navigator
+      initialRouteName="HomeMain"
       activeColor={ogreen}
       screenOptions={{
         headerShown: false,
@@ -33,11 +39,17 @@ export default function BottomBar() {
         },
       }}>
       <Tab.Screen
-        name="heart"
-        component={Home}
+        name="MyReservation"
+        component={MyReservation}
         options={{
           tabBarIcon: ({color}) => (
             <OIcon name="book" color={color} size={size} />
+          ),
+          headerShown: false,
+          headerTitle: () => (
+            <View style={style.navView}>
+              <Text style={style.navText}>예약 현황</Text>
+            </View>
           ),
         }}
       />
@@ -48,7 +60,6 @@ export default function BottomBar() {
           tabBarIcon: ({color}) => (
             <OIcon name="home" color={color} size={size} />
           ),
-          tabBarLabel: 'Home',
         }}
       />
       <Tab.Screen
@@ -57,6 +68,12 @@ export default function BottomBar() {
         options={{
           tabBarIcon: ({color}) => (
             <AIcon name="user" color={color} size={size} />
+          ),
+          headerShown: false,
+          headerTitle: () => (
+            <View style={style.navView}>
+              <Text style={style.navText}>My Page</Text>
+            </View>
           ),
         }}
       />

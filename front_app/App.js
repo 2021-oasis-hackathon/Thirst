@@ -15,6 +15,7 @@ import DrawerBar from './src/navigator/drawbar';
 import Detail from './src/components/AppTabs/detail';
 import Scheduler from './src/components/AppTabs/Scheduler';
 import Reservation from './src/components/AppTabs/Reservation';
+import BottomBar from './src/navigator/bottom';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -37,6 +38,7 @@ export default function App() {
             }}>
             <Stack.Screen name="Main" component={DrawerBar} />
             <Stack.Screen name="Detail" component={Detail} />
+            <Stack.Screen name="Scheduler" component={Scheduler} />
             <Stack.Screen name="Reservation" component={Reservation} />
           </Stack.Navigator>
         </NavigationContainer>

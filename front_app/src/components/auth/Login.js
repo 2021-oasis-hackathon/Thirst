@@ -16,6 +16,8 @@ import {bold, plane} from '../../assets/font';
 
 //import {checkLogin} from '../../redux/actions';
 import {ScrollView} from 'react-native-gesture-handler';
+import {lgreen} from '../../assets/color';
+
 //import * as KakaoLogins from '@react-native-seoul/kakao-login';
 
 const {width, height} = Dimensions.get('window');
@@ -49,48 +51,48 @@ const Login = ({navigation}) => {
     }
   };
 
-  const signInWithKakao = async () => {
-    const token = await KakaoLogins.login();
-    console.log(token);
-    //setResult(JSON.stringify(token));
-  };
-
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <View style={styles.inputContainer}>
-          <Text></Text>
-          <TextInput
-            style={styles.input}
-            placeholder="  아이디"
-            onChangeText={n => {
-              setId(n);
-            }}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder=" 비밀번호"
-            secureTextEntry={true}
-            right={<TextInput.Icon name="eye" />}
-            onChangeText={n => {
-              setPasswd(n);
-            }}
-          />
-        </View>
-        <View style={styles.login}>
-          <TouchableOpacity style={styles.login} onPress={onLogin}>
-            <Text style={styles.loginText}>로그인</Text>
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          style={styles.reg}
-          onPress={() => {
-            navigation.navigate('Register');
-            //signInWithKakao();
-          }}>
-          <Text style={styles.regText}>회원가입</Text>
+      <Image
+        source={require('../../assets/loginLogo.png')}
+        style={{
+          width: width / 2,
+          height: width / 5,
+          marginBottom: 50,
+          marginTop: width / 3,
+        }}
+        resizeMode="stretch"
+      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="  아이디"
+          onChangeText={n => {
+            setId(n);
+          }}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder=" 비밀번호"
+          secureTextEntry={true}
+          onChangeText={n => {
+            setPasswd(n);
+          }}
+        />
+      </View>
+      <View style={styles.login}>
+        <TouchableOpacity style={styles.login} onPress={onLogin}>
+          <Text style={styles.loginText}>로그인</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
+      <TouchableOpacity
+        style={styles.reg}
+        onPress={() => {
+          navigation.navigate('Register');
+          //signInWithKakao();
+        }}>
+        <Text style={styles.regText}>회원가입</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -110,7 +112,7 @@ const styles = StyleSheet.create({
     marginTop: 75,
   },
   login: {
-    backgroundColor: 'rgb(64,183,173)',
+    backgroundColor: lgreen,
     flexDirection: 'row',
     width: width - 50,
     height: 60,
@@ -132,7 +134,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     fontSize: 20,
     borderWidth: 2,
-    borderColor: 'black',
+    borderColor: '#E9E9E9',
     textAlign: 'center',
   },
   inputContainer: {},
