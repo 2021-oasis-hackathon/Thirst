@@ -17,11 +17,12 @@ import Reservation from '../components/AppTabs/Reservation';
 import Scheduler from '../components/AppTabs/Scheduler';
 import Today from '../components/AppTabs/Today';
 import {ogreen} from '../assets/color';
+import Profile from '../components/AppTabs/Profile';
 const Drawer = createDrawerNavigator();
 
 export default function DrawerBar({navigation, props}) {
   useEffect(() => {}, []);
-  console.log(props);
+
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -43,7 +44,7 @@ export default function DrawerBar({navigation, props}) {
             </View>
           ),
         }}
-        component={BottomBar}
+        component={Home}
       />
       <Drawer.Screen
         name="menu3"
