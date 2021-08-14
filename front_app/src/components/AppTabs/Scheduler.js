@@ -215,6 +215,7 @@ function Scheduler({navigation}) {
                 price: info.price,
                 time: i.time,
                 date: day,
+                remain: 5,
               });
             }}>
             <Text style={styles.itemTime}>{i.time}</Text>
