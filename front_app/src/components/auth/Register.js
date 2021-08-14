@@ -11,9 +11,9 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native';
+import {lgreen} from '../../assets/color';
 
-
-import { bold, plane } from '../../assets/font'
+import {bold, plane} from '../../assets/font';
 
 const {width, height} = Dimensions.get('window');
 
@@ -37,7 +37,6 @@ const Register = ({navigation}) => {
         },
       ]);
     } else {
-     
     }
   };
   const oncheck = () => {
@@ -69,7 +68,7 @@ const Register = ({navigation}) => {
       setErr('번호를 입력해주세요.');
       return false;
     }
-  
+
     if (!checkPoint) {
       setErr('개인정보 약관에 동의해주세요.');
       return false;
@@ -90,8 +89,6 @@ const Register = ({navigation}) => {
       nickname: nick,
       message: '',
     };
-
-    
   };
 
   return (
@@ -131,13 +128,12 @@ const Register = ({navigation}) => {
             placeholder="이름"
             onChangeText={n => setName(n)}
           />
-        
+
           <TextInput
             style={styles.input}
             placeholder="휴대폰 번호(010-0000-0000)"
             onChangeText={n => setPhone(n)}
           />
-          
 
           <View style={styles.checkContainer}>
             <TouchableOpacity
@@ -173,6 +169,7 @@ const styles = StyleSheet.create({
   headContainer: {
     borderBottomWidth: 3,
     borderBottomColor: 'black',
+    marginTop: width / 20,
   },
   head: {
     fontFamily: bold,
@@ -185,33 +182,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonContainer: {
-    backgroundColor: 'rgb(64,183,173)',
+    backgroundColor: lgreen,
     color: 'black',
     height: width / 8,
     justifyContent: 'center',
     fontSize: 20,
     marginVertical: width / 30,
-    borderRadius : 10
+    borderRadius: 10,
   },
   regButton: {
     fontSize: 25,
     fontFamily: bold,
-    color: 'black',
+    color: 'white',
     textAlign: 'center',
   },
   idButton: {
     width: width / 4,
     marginBottom: width / 60,
-    backgroundColor: 'rgb(64,183,173)',
+    backgroundColor: lgreen,
     height: width / 9,
     justifyContent: 'center',
-    borderRadius : 7
+    borderRadius: 7,
   },
   idButtonText: {
     fontSize: 17,
-    color: 'black',
+    color: 'white',
     textAlign: 'center',
-    fontFamily : bold
+    fontFamily: bold,
   },
   inputContainer: {
     width: width - width / 30,
@@ -223,7 +220,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     fontSize: width / 28,
     width: width - width / 20,
-    marginVertical: width / 60,
+    marginVertical: width / 30,
   },
   errmessage: {
     textAlign: 'center',
@@ -235,7 +232,7 @@ const styles = StyleSheet.create({
     width: width,
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: width / 40,
+    marginVertical: width / 20,
   },
   checkPoint: {
     borderRadius: 20,
