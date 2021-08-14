@@ -8,6 +8,7 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
+import {ogreen} from '../../assets/color';
 import {bold, plane} from '../../assets/font';
 
 const {width, height} = Dimensions.get('window');
@@ -18,6 +19,8 @@ const data = [
     writer: '발견했어요',
     uri: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMDEwMDlfMTUw%2FMDAxNjAyMjIyOTA0MzMz.fGo98gTnOHnNMzTHPIOhqMx4oMdb5y0bVvcTaZ0rZ9og.G8QEJdkHbNhVGeSMgJZeAnhknSwUyPlUEaQrE1ZtHTEg.JPEG.eemeelee%2F1602222904458.jpg&type=sc960_832',
     comments: '아름다운 벼농장을 발견했어요\n 확인해주세요!',
+    location: '농촌 벼 체험장',
+    period: '3/1~ 11-31',
     date: '2021-08-13',
   },
   {
@@ -25,6 +28,8 @@ const data = [
     writer: '발견했어요',
     uri: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMDEwMDlfMTUw%2FMDAxNjAyMjIyOTA0MzMz.fGo98gTnOHnNMzTHPIOhqMx4oMdb5y0bVvcTaZ0rZ9og.G8QEJdkHbNhVGeSMgJZeAnhknSwUyPlUEaQrE1ZtHTEg.JPEG.eemeelee%2F1602222904458.jpg&type=sc960_832',
     comments: '아름다운 벼농장을 발견했어요\n 확인해주세요!',
+    location: '농촌 벼 체험장',
+    period: '3/1~ 11-31',
     date: '2021-08-13',
   },
 ];
@@ -32,7 +37,10 @@ const data = [
 function Today(props) {
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.reviews}>
+      <ScrollView
+        style={styles.reviews}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}>
         {data.map((item, index) => {
           return (
             <View key={index} style={styles.review}>
@@ -46,13 +54,26 @@ function Today(props) {
                 </View>
                 <Text style={styles.date}>{item.date}</Text>
               </View>
-
-              <Image
-                source={{
-                  uri: item.uri,
-                }}
-                style={styles.image}
-              />
+              <View style={styles.column}>
+                <Image
+                  source={{
+                    uri: item.uri,
+                  }}
+                  style={styles.image}
+                />
+                <View style={styles.row}>
+                  <View style={[styles.column, {marginLeft: 5}]}>
+                    <Text style={styles.bold}>운영장소</Text>
+                    <Text style={[styles.bold, {marginTop: 5}]}>운영기간</Text>
+                  </View>
+                  <View style={[styles.column, {marginLeft: 10}]}>
+                    <Text style={styles.bold}>{item.location}</Text>
+                    <Text style={[styles.bold, {marginTop: 5}]}>
+                      {item.period}
+                    </Text>
+                  </View>
+                </View>
+              </View>
               <View style={[styles.contents, styles.column]}>
                 <Text style={styles.comments}> {item.comments}</Text>
                 <Text style={styles.writer}> 작성자 {item.writer}</Text>
@@ -90,6 +111,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 10,
   },
+  bold: {
+    color: ogreen,
+    fontSize: 12,
+    fontFamily: bold,
+  },
   review: {
     marginTop: 15,
     borderRadius: 10,
@@ -125,7 +151,7 @@ const styles = StyleSheet.create({
     color: '#7F7F7F',
   },
   image: {
-    width: 290,
+    width: 300,
     height: 230,
     marginTop: 15,
     marginBottom: 10,
@@ -147,6 +173,6 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     fontSize: 11,
     textAlign: 'right',
-    marginRight: 10,
+    marginRight: 5,
   },
 });

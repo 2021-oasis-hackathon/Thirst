@@ -13,9 +13,10 @@ import Home from '../components/home';
 
 import Detail from '../components/AppTabs/detail';
 import {bold} from '../assets/font';
-import List from '../components/AppTabs/list';
+import Reservation from '../components/AppTabs/Reservation';
 import Scheduler from '../components/AppTabs/Scheduler';
 import Today from '../components/AppTabs/Today';
+import {ogreen} from '../assets/color';
 const Drawer = createDrawerNavigator();
 
 export default function DrawerBar({navigation, props}) {
@@ -34,7 +35,12 @@ export default function DrawerBar({navigation, props}) {
         name="Home"
         options={{
           headerTitle: () => (
-            <Text style={{fontFamily: bold, fontSize: 20}}>촌스러운</Text>
+            <View style={{display: 'flex', flexDirection: 'row'}}>
+              <Text style={{fontFamily: bold, fontSize: 20, color: 'green'}}>
+                촌
+              </Text>
+              <Text style={{fontFamily: bold, fontSize: 20}}>스러운</Text>
+            </View>
           ),
         }}
         component={BottomBar}
@@ -48,7 +54,15 @@ export default function DrawerBar({navigation, props}) {
         }}
         component={Detail}
       />
-      <Drawer.Screen name="list" component={List} />
+      <Drawer.Screen
+        name="Reservation"
+        options={{
+          headerTitle: () => (
+            <Text style={{fontFamily: bold, fontSize: 20}}>예약 신청</Text>
+          ),
+        }}
+        component={Reservation}
+      />
       <Drawer.Screen name="scheduler" component={Scheduler} />
       <Drawer.Screen
         name="Today"

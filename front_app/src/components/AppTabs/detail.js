@@ -59,14 +59,14 @@ function Detail({navigation}) {
 
         <View>
           <TouchableOpacity style={styles.button} onPress={() => {}}>
-            <Text style={styles.reser}>쿠폰 발급받기</Text>
+            <Text style={styles.buttonText}>쿠폰 발급받기</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
               navigation.navigate('Reservation');
             }}>
-            <Text style={styles.reser}>예약하기</Text>
+            <Text style={styles.buttonText}>예약하기</Text>
           </TouchableOpacity>
         </View>
 
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: lgreen,
   },
-  reser: {
+  buttonText: {
     textAlign: 'center',
     fontSize: 17,
     color: 'white',

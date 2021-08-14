@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import FIcon from 'react-native-vector-icons/Fontisto';
-import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AIcon from 'react-native-vector-icons/AntDesign';
+import OIcon from 'react-native-vector-icons/Octicons';
 
 import Home from '../components/home';
 import Detail from '../components/AppTabs/detail';
@@ -21,7 +21,7 @@ export default function BottomBar() {
       activeColor={ogreen}
       screenOptions={{
         headerShown: false,
-
+        tabBarShowLabel: false,
         showIcon: true,
         tabBarActiveTintColor: ogreen,
         tabBarInactiveTintColor: '#d1cece',
@@ -37,7 +37,7 @@ export default function BottomBar() {
         component={Home}
         options={{
           tabBarIcon: ({color}) => (
-            <MIcon name="heart" color={color} size={size} />
+            <OIcon name="book" color={color} size={size} />
           ),
         }}
       />
@@ -46,7 +46,7 @@ export default function BottomBar() {
         component={Home}
         options={{
           tabBarIcon: ({color}) => (
-            <MIcon name="home" color={color} size={size} />
+            <OIcon name="home" color={color} size={size} />
           ),
           tabBarLabel: 'Home',
         }}
@@ -56,7 +56,7 @@ export default function BottomBar() {
         component={Profile}
         options={{
           tabBarIcon: ({color}) => (
-            <MIcon name="account" color={color} size={size} />
+            <AIcon name="user" color={color} size={size} />
           ),
         }}
       />

@@ -42,7 +42,10 @@ function TodaysReview({navigation}) {
           />
           <Text style={styles.today}>오늘의 발견</Text>
         </View>
-        <ScrollView style={styles.reviews}>
+        <ScrollView
+          style={styles.reviews}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}>
           {data.map((item, index) => {
             return (
               <View key={index} style={[styles.row, styles.contents]}>

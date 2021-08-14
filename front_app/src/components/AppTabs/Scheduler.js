@@ -194,7 +194,11 @@ const getMonthData = () => {
   return [dataToReturn, false];
 };
 
-function Scheduler({navigation, info}) {
+const info = {
+  name: '감자 수확 체험',
+  price: 10000,
+};
+function Scheduler({navigation}) {
   const [monthData, loadingData] = getMonthData();
 
   const renderItem = (item, day) => {
@@ -207,7 +211,8 @@ function Scheduler({navigation, info}) {
             key={`${day}-${index}`}
             onPress={() => {
               navigation.navigate('Reservation', {
-                name: 'test',
+                name: info.name,
+                price: info.price,
                 time: i.time,
                 date: day,
               });
