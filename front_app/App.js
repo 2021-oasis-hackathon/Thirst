@@ -16,49 +16,53 @@ import Detail from './src/components/AppTabs/detail';
 import Scheduler from './src/components/AppTabs/Scheduler';
 import Reservation from './src/components/AppTabs/Reservation';
 import BottomBar from './src/navigator/bottom';
+import List from './src/components/AppTabs/list';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function App() {
-  const [loggedIn, setLoggedIn] = useState(true);
+  const user = useSelector(state => state.user);
 
   useEffect(() => {}, []);
 
-  if (loggedIn)
+  if (user.name)
     return (
-      <Provider store={store}>
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="Main"
-            screenOptions={{
-              headerMode: 'none',
-              headerTintColor: 'white',
-              headerStyle: {backgroundColor: 'tomato'},
-            }}>
-            <Stack.Screen name="Main" component={DrawerBar} />
-            <Stack.Screen name="Detail" component={Detail} />
-            <Stack.Screen name="Scheduler" component={Scheduler} />
-            <Stack.Screen name="Reservation" component={Reservation} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </Provider>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Main"
+          screenOptions={{
+            headerMode: 'none',
+            headerTintColor: 'white',
+            headerStyle: {backgroundColor: 'tomato'},
+          }}>
+          <Stack.Screen name="Main" component={DrawerBar} />
+          <Stack.Screen name="Detail" component={Detail} />
+          <Stack.Screen name="Scheduler" component={Scheduler} />
+          <Stack.Screen name="Reservation" component={Reservation} />
+          <Stack.Screen
+            name="list"
+            options={{
+              headerTitle: () => <Logo />,
+            }}
+            component={List}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     );
   else
     return (
-      <Provider store={store}>
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="Login"
-            screenOptions={{
-              headerMode: 'none',
-              headerTintColor: 'white',
-              headerStyle: {backgroundColor: 'black'},
-            }}>
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Register" component={Register} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </Provider>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Login"
+          screenOptions={{
+            headerMode: 'none',
+            headerTintColor: 'white',
+            headerStyle: {backgroundColor: 'black'},
+          }}>
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Register" component={Register} />
+        </Stack.Navigator>
+      </NavigationContainer>
     );
 }

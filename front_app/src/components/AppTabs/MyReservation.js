@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -6,32 +6,103 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  ScrollView,
 } from 'react-native';
 import style from '../../assets/style';
 import {LocaleConfig} from 'react-native-calendars';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
+import axios from 'axios';
+import {lgreen} from '../../assets/color';
+import {bold} from '../../assets/font';
 
 LocaleConfig.locales['fr'] = {
-  monthNames: ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
-  monthNamesShort: ['Janv.','Févr.','Mars','Avril','Mai','Juin','Juil.','Août','Sept.','Oct.','Nov.','Déc.'],
-  dayNames: ['일요일','월요일', '화요일','수요일','목요일','금요일','토요일'],
-  dayNamesShort: ['일', '월','화','수','목','금','토'],
-  today: 'Aujourd\'hui'
+  monthNames: [
+    'Janvier',
+    'Février',
+    'Mars',
+    'Avril',
+    'Mai',
+    'Juin',
+    'Juillet',
+    'Août',
+    'Septembre',
+    'Octobre',
+    'Novembre',
+    'Décembre',
+  ],
+  monthNamesShort: [
+    'Janv.',
+    'Févr.',
+    'Mars',
+    'Avril',
+    'Mai',
+    'Juin',
+    'Juil.',
+    'Août',
+    'Sept.',
+    'Oct.',
+    'Nov.',
+    'Déc.',
+  ],
+  dayNames: [
+    '일요일',
+    '월요일',
+    '화요일',
+    '수요일',
+    '목요일',
+    '금요일',
+    '토요일',
+  ],
+  dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+  today: "Aujourd'hui",
 };
 LocaleConfig.defaultLocale = 'fr';
 
 const {width, height} = Dimensions.get('window');
 
+const testData = {
+  '8/16': {
+    time: '15:00',
+    location: '농가 마을',
+    phone: '010-0000-0000',
+  },
+  '8/17': {
+    time: '15:10',
+    location: '갯벌 바다',
+    phone: '010-0000-0000',
+  },
+  '8/18': {
+    time: '15:00',
+    location: '갯벌 바다',
+    phone: '010-0000-0000',
+  },
+  '8/19': {
+    time: '15:00',
+    location: '갯벌 바다',
+    phone: '010-0000-0000',
+  },
+};
 
 function MyReservation(props) {
+  const [reservList, setReservList] = useState(null);
+  useEffect(() => {
+    /*
+      axios.get(`http://${url}/myreservation`)
+            .then(res => {
+                if(res.)
+                setRservList(res.data);
+            })
+            .catch(err => {
+                console.log('get error');
+            });
+      
+    */
+  }, []);
   return (
-    
     <View style={styles.container}>
-      <View style={styles.container}>
-        <View style={styles.my_res}>
+      <View style={styles.my_res}>
         <View style={styles.cal}>
-
-        <Calendar
+          <Calendar
             current={new Date()}
             onDayPress={day => {
               console.log('selected day', day);
@@ -44,11 +115,10 @@ function MyReservation(props) {
               console.log('month changed', month);
             }}
             hideArrows={false}
-            
             hideExtraDays={false}
             firstDay={0}
             //markingType={'period'}
-            
+
             markedDates={{
               '2021-08-15': {selected: true, selectedColor: '#94AF23'},
               '2021-08-16': {marked: true, dotColor: '#3D550C'},
@@ -57,83 +127,43 @@ function MyReservation(props) {
             }}
             enableSwipeMonths={true}
             style={styles.Calendar}
-
             theme={{
               arrowColor: '#94AF23',
             }}
-            />
-
+          />
         </View>
-      <View style={styles.row}>
-      <Image source={require('../../assets/bori.png')} style={style.icon} />
-        <Text style={styles.titleText}>
-        내 예약 현황
-        </Text>
       </View>
+      <View style={styles.row}>
+        <Image source={require('../../assets/bori.png')} style={style.icon} />
+        <Text style={styles.titleText}>내 예약 현황</Text>
+      </View>
+      <ScrollView contentContainerStyle={{}}>
+        {Object.entries(testData).map(([key, value]) => {
+          return (
+            <View style={styles.section} key={key}>
+              <View style={styles.row}>
+                <Text style={styles.date}>{key}</Text>
 
-        <View style={styles.section}>
-          <View style={styles.row}>
-            <Text style={styles.date}>
-              8/16
-            </Text>
+                <Text style={styles.res_info}>
+                  예약 시간 {'\n'}
+                  운영 장소 {'\n'}
+                  연락처 {'\n'}
+                </Text>
 
-            <Text style={styles.res_info}>
-            예약 시간 {"\n"}
-            운영 장소 {"\n"}
-            연락처 {"\n"}
-            </Text>
-
-            <Text style={styles.res_info}>
-            15:00 {"\n"}
-            농가 마을 {"\n"}
-            010-0000-0000 {"\n"}
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <View style={styles.row}>
-            <Text style={styles.date}>
-              8/17
-            </Text>
-
-            <Text style={styles.res_info}>
-            예약 시간 {"\n"}
-            운영 장소 {"\n"}
-            연락처 {"\n"}
-            </Text>
-
-            <Text style={styles.res_info}>
-            11:00 {"\n"}
-            갯벌 바다 {"\n"}
-            010-0000-0000 {"\n"}
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <View style={styles.row}>
-            <Text style={styles.date}>
-              8/18
-            </Text>
-
-            <Text style={styles.res_info}>
-            예약 시간 {"\n"}
-            운영 장소 {"\n"}
-            연락처 {"\n"}
-            </Text>
-
-            <Text style={styles.res_info}>
-            11:00 {"\n"}
-            갯벌 바다 {"\n"}
-            010-0000-0000 {"\n"}
-            </Text>
-          </View>
-        </View>
-
-      
-  </View>
-    </View>
+                <Text style={styles.res_info}>
+                  {value.time} {'\n'}
+                  {value.location} {'\n'}
+                  {value.phone}
+                  {'\n'}
+                </Text>
+                <TouchableOpacity style={styles.reviewButton}>
+                  <Text style={styles.reviewText}>후기작성</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          );
+        })}
+      </ScrollView>
     </View>
   );
 }
@@ -145,7 +175,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: 'white',
-
   },
   //section: {},
   day: {
@@ -199,7 +228,7 @@ const styles = StyleSheet.create({
   date: {
     color: '#6D6D6D',
     fontSize: 20,
-    fontWeight: "500",
+    fontWeight: '500',
     margin: 20,
     marginRight: 10,
     fontWeight: 'bold',
@@ -212,11 +241,21 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     lineHeight: 20,
     fontWeight: 'bold',
-
   },
   row: {
-    //flex: 1,
     width: width - 80,
     flexDirection: 'row',
+  },
+  reviewButton: {
+    backgroundColor: lgreen,
+    borderRadius: 10,
+    marginLeft: 5,
+    height: 25,
+    top: 60,
+  },
+  reviewText: {
+    fontFamily: bold,
+    color: 'white',
+    margin: 5,
   },
 });

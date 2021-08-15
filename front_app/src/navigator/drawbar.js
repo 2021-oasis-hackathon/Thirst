@@ -45,15 +45,7 @@ export default function DrawerBar({navigation, props}) {
         }}
         component={BottomBar}
       />
-      <Drawer.Screen
-        drawerHideStatusBarOnOpen="true"
-        name="list"
-        options={{
-          drawerLabel: 'none',
-          headerTitle: () => <Logo />,
-        }}
-        component={List}
-      />
+
       <Drawer.Screen
         name="scheduler"
         options={{drawerLabel: 'none', headerTitle: () => <Logo />}}
