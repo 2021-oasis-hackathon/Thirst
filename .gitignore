@@ -1,0 +1,6 @@
+
+*.pyc
+*sqlite3
+thirst_backend/backend_api/migrations/
+thirst_backend/user/migrations/
+*.DS_Store
