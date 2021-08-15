@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_spectacular',
     'backend_api',
+    'user',
 ]
 
 MIDDLEWARE = [
@@ -80,14 +81,15 @@ WSGI_APPLICATION = 'thirst_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
-        'ENGINE':'mysql.connector.django',
-        'NAME':'os_db',
-        'USER':'root',
-        'PASSWORD': '950219',
-        'HOST': 'localhost',
-        'PORT':'3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+
+        # 'ENGINE':'mysql.connector.django',
+        # 'NAME':'os_db',
+        # 'USER':'root',
+        # 'PASSWORD': '950219',
+        # 'HOST': 'localhost',
+        # 'PORT':'3306',
     }
 }
 
@@ -162,4 +164,4 @@ SIMPLE_JWT = {
     "UPDATE_LAST_LOGIN": True,
 }
 
-# AUTH_USER_MODEL = 'backend_api.User'
+AUTH_USER_MODEL = 'user.User'
