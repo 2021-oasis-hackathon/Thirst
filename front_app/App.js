@@ -27,38 +27,34 @@ export default function App() {
 
   if (loggedIn)
     return (
-      <Provider store={store}>
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="Main"
-            screenOptions={{
-              headerMode: 'none',
-              headerTintColor: 'white',
-              headerStyle: {backgroundColor: 'tomato'},
-            }}>
-            <Stack.Screen name="Main" component={DrawerBar} />
-            <Stack.Screen name="Detail" component={Detail} />
-            <Stack.Screen name="Scheduler" component={Scheduler} />
-            <Stack.Screen name="Reservation" component={Reservation} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </Provider>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Main"
+          screenOptions={{
+            headerMode: 'none',
+            headerTintColor: 'white',
+            headerStyle: {backgroundColor: 'tomato'},
+          }}>
+          <Stack.Screen name="Main" component={DrawerBar} />
+          <Stack.Screen name="Detail" component={Detail} />
+          <Stack.Screen name="Scheduler" component={Scheduler} />
+          <Stack.Screen name="Reservation" component={Reservation} />
+        </Stack.Navigator>
+      </NavigationContainer>
     );
   else
     return (
-      <Provider store={store}>
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="Login"
-            screenOptions={{
-              headerMode: 'none',
-              headerTintColor: 'white',
-              headerStyle: {backgroundColor: 'black'},
-            }}>
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Register" component={Register} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </Provider>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Login"
+          screenOptions={{
+            headerMode: 'none',
+            headerTintColor: 'white',
+            headerStyle: {backgroundColor: 'black'},
+          }}>
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Register" component={Register} />
+        </Stack.Navigator>
+      </NavigationContainer>
     );
 }
