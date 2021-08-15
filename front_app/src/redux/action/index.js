@@ -1,11 +1,13 @@
-import axios from 'axios'
-const USER_LOGIN = 'USER_LOGIN'
+import axios from 'axios';
+const USER_LOGIN = 'USER_LOGIN';
 
-export const Login = (id, pw)=>{ 
-    return((dispatch)=>{
-        dispatch({
-            type : USER_LOGIN,
-            
-        });
-    })
-}
+export const UserLogin = data => {
+  return dispatch => {
+    dispatch({
+      type: USER_LOGIN,
+      credit: data.credit,
+      name: data.name,
+      phone: data.phone,
+    });
+  };
+};
