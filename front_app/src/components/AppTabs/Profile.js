@@ -7,6 +7,7 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
+import {useSelector} from 'react-redux';
 import {lgreen} from '../../assets/color';
 import {bold} from '../../assets/font';
 import style from '../../assets/style';
@@ -14,6 +15,8 @@ import style from '../../assets/style';
 const {width, height} = Dimensions.get('window');
 
 function Profile(props) {
+  const user = useSelector(state => state.user);
+
   return (
     <View style={styles.container}>
       <View style={[styles.profile, styles.border]}>
@@ -25,10 +28,10 @@ function Profile(props) {
             <Text style={styles.text}>잔고</Text>
           </View>
           <View style={styles.section}>
-            <Text style={styles.text}>발견했어요</Text>
-            <Text style={styles.text}>010-0000-0000</Text>
+            <Text style={styles.text}>{user.name}</Text>
+            <Text style={styles.text}>{user.phone}</Text>
             <View style={styles.row}>
-              <Text style={styles.text}>24000</Text>
+              <Text style={styles.text}>{user.credit}</Text>
               <TouchableOpacity style={styles.chargeButton}>
                 <Text style={styles.chargeText}>충전</Text>
               </TouchableOpacity>
