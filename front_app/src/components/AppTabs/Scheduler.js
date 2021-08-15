@@ -1,5 +1,5 @@
 import {white} from 'chalk';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Text,
   View,
@@ -54,6 +54,7 @@ function Scheduler({navigation}) {
   const [dataList, setDataList] = useState({});
   const [selectList, setSelectList] = useState({});
   const [barLocation, setbarLocation] = useState(0);
+  const scrollRef = useRef(null);
 
   const renderItem = (item, day) => {
     if (item.length)
@@ -79,6 +80,16 @@ function Scheduler({navigation}) {
         );
       });
     else return <Text>휴일입니다!</Text>;
+  };
+
+  const sortItems = select => {
+    let keys = Object.keys(select);
+
+    keys.sort();
+    let sortedList = {};
+    for (let i = 0; i < keys.length; i++) sortedList[keys[i]] = select[keys[i]];
+
+    setSelectList(sortedList);
   };
 
   const makeBarItems = () => {
@@ -142,7 +153,7 @@ function Scheduler({navigation}) {
                   let select = {...selectList};
                   if (datas[key].checked) select[key] = datas[key].data;
                   else delete select[key];
-                  setSelectList(select);
+                  sortItems(select);
                 }}>
                 <View
                   style={[
@@ -173,8 +184,14 @@ function Scheduler({navigation}) {
           </View>
         </View>
         <View style={[styles.bar]} />
-        <View style={{alignItems: 'center'}}>
-          <ScrollView contentContainerStyle={styles.itemScroll}>
+        <View style={{alignItems: 'center', height: height - 100}}>
+          <ScrollView
+            contentContainerStyle={styles.itemScroll}
+            ref={scrollRef}
+            onContentSizeChange={() => {
+              // console.log(itemScroll);
+              scrollRef.current.scrollToEnd({animated: true});
+            }}>
             {Object.entries(selectList).map(([key, value]) => (
               <View key={`item${key}`} style={[styles.day, style.row]}>
                 <View style={styles.dateView}>
@@ -245,7 +262,9 @@ const styles = StyleSheet.create({
     backgroundColor: lgreen,
     color: 'white',
   },
-  itemScroll: {},
+  itemScroll: {
+    flexWrap: 'wrap',
+  },
   items: {
     backgroundColor: 'white',
     width: width - 60,
