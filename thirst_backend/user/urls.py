@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 from user.views import (
     CustomerViewsets,
     OwnerViewsets,
+    UserViewsets,
 )
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -13,6 +14,7 @@ from rest_framework_simplejwt.views import (
 router = DefaultRouter()
 router.register(r'Customer',CustomerViewsets)
 router.register(r'Owner',OwnerViewsets)
+router.register(r'User',UserViewsets)
 
 
 urlpatterns = [

@@ -1,4 +1,5 @@
-from rest_framework import exceptions
+from django.db import models
+from rest_framework import exceptions, fields
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from rest_framework.utils import field_mapping
@@ -17,18 +18,6 @@ class OwnerCreateSerializer(ModelSerializer):
             'name',
             'password',
         )
-        
-    # def validate(self, attrs):
-    #     password=attrs.get('password')
-    #     errors=dict()
-    #     try:
-    #         validate_password(password=password)
-    #     except exceptions.ValidationError as e:
-    #         errors['password']=list(e.messages)
-        
-    #     if len(errors):
-    #         raise serializers.ValidationError(errors)
-    #     return attrs
 
     def create(self,validation_data):
 
@@ -48,18 +37,6 @@ class CustomerCreateSerializer(ModelSerializer):
             'name',
             'password',
         )
-        
-    # def validate(self, attrs):
-    #     password=attrs.get('password')
-    #     errors=dict()
-    #     try:
-    #         validate_password(password=password)
-    #     except exceptions.ValidationError as e:
-    #         errors['password']=list(e.messages)
-        
-    #     if len(errors):
-    #         raise serializers.ValidationError(errors)
-    #     return attrs
 
     def create(self,validation_data):
         
@@ -80,3 +57,11 @@ class CustomerSerializer(ModelSerializer):
     class Meta:
         model=Customer
         fields='__all__'
+
+class UserSerializer(ModelSerializer):
+    class Meta:
+        model=User
+        fields='__all__'
+
+class CheckUsernameSerializer(serializers.Serializer):
+    username=serializers.CharField()

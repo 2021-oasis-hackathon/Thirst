@@ -2,6 +2,8 @@ from django.shortcuts import render
 
 # from django.contrib.auth import get_user_model
 from rest_framework import viewsets
+from rest_framework import request
+from rest_framework import response
 from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
@@ -10,21 +12,41 @@ from drf_spectacular.views import extend_schema, OpenApiTypes, OpenApiParameter
 from user.models import (
     Customer,
     Owner,
+    User,
 )
-from .serializers import (
+from user.serializers import (
+    CheckUsernameSerializer,
     OwnerCreateSerializer,
     CustomerCreateSerializer,
     CustomerSerializer,
     OwnerSerializer,
+    UserSerializer,
 )
 
+@permission_classes([AllowAny])
+@extend_schema(tags=["api"], summary="유저 API", description="유저 API")
+class UserViewsets(viewsets.ModelViewSet):
+    queryset=User.objects.all()
+    serializer_class=UserSerializer
 
+    @extend_schema(request=CheckUsernameSerializer,summary="중복확인 API")
+    @action(methods=['POST'], detail=False)
+    def double_check(self,request):
+        username=request.data.get('username')
+        if username:
+            if User.objects.filter(username=username).exists():
+                return Response('exist')
+            else:
+                return Response('ok')
+        return Response('wrong val')
 
 @permission_classes([AllowAny])
 @extend_schema(tags=["api"], summary="이용자 API", description="이용자 API")
 class CustomerViewsets(viewsets.ModelViewSet):
     queryset=Customer.objects.all()
     serializer_class=CustomerSerializer
+
+
 
     def get_serializer_class(self):
         if self.request.method in ['GET']:
