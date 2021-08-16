@@ -3,7 +3,7 @@ from django.utils import translation
 
 # from django.contrib.auth import get_user_model
 from rest_framework import viewsets
-from rest_framework.decorators import action, permission_classes
+from rest_framework.decorators import action, api_view
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -50,7 +50,6 @@ class TourViewsets(viewsets.ModelViewSet):
     @action(methods=['POST'], detail=False)
     def seach_theme(self,request):
         theme = request.data.get('theme')
-        
         if theme:
             res=Tour.objects.filter(tour_theme=theme)
             serializer=TourlistSerializer(res,many=True)
@@ -69,3 +68,4 @@ class ReservViewsets(viewsets.ModelViewSet):
     queryset=Reserv.objects.all()
     serializer_class=ReservSerializer
     pass
+

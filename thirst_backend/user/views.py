@@ -21,6 +21,7 @@ from user.serializers import (
     CustomerSerializer,
     OwnerSerializer,
     UserSerializer,
+    NamePhoneSerializer,
 )
 
 @permission_classes([AllowAny])
@@ -40,6 +41,14 @@ class UserViewsets(viewsets.ModelViewSet):
             else:
                 return Response('ok')
         return Response('wrong val')
+
+    @extend_schema(summary="유저 API", description="현재 로그인한 유저의 이름,전화번호")
+    @action(methods=['GET'], detail=False)
+    def auth_user(self, request):
+        qs=request.user
+        if request.user.is_authenticated:
+            serializer = NamePhoneSerializer(qs, many=False)
+            return Response(serializer.data)
 
 @permission_classes([AllowAny])
 @extend_schema(tags=["api"], summary="이용자 API", description="이용자 API")
