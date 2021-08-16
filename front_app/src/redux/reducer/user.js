@@ -1,18 +1,20 @@
 const USER_LOGIN = 'USER_LOGIN';
+const USER_LOGOUT = 'USER_LOGOUT';
 
 const initialState = {
-  name: '',
-  phone: '',
-  credit: '',
+  token: null,
 };
 
 const user = (state = initialState, action) => {
-  if (action.type == USER_LOGIN)
+  if (action.type == USER_LOGIN) {
+    console.log(action.token);
     return {
       ...state,
-      name: action.name,
-      phone: action.phone,
-      credit: action.credit,
+      token: action.token,
+    };
+  } else if (action.type == USER_LOGOUT)
+    return {
+      state: initialState,
     };
   else return state;
 };
