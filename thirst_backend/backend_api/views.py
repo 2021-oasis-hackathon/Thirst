@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.utils import translation
 
 # from django.contrib.auth import get_user_model
 from rest_framework import viewsets
@@ -17,24 +18,44 @@ from backend_api.serializers import (
     ReviewSerializer,
     ReservSerializer,
     TourlistSerializer,
+    TourlistdetailSerializer,
+    SearchThemeSerializer,
 )
 
 @extend_schema(tags=["api"], summary="관광지 API", description="관광지 API")
 class TourViewsets(viewsets.ModelViewSet):
     queryset=Tour.objects.all()
     serializer_class=TourSerializer
-
-    @extend_schema(request=TourlistSerializer,summary="tour_list API")
+    lookup_field='tour_name'
+    
+    @extend_schema(summary="tour_list API")
     @action(methods=['GET'], detail=False)
     def show_list(self,request):
-        pass
-        username=request.data.get('username')#리퀘스트에있는 시리얼라이저 변수를 가져오는것
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
-    @extend_schema(request=TourlistSerializer,summary="tour_list API")
-    @action(methods=['GET'], detail=True)
-    def show_list_detail(self,request):
-        pass
-        username=request.data.get('username')#리퀘스트에있는 시리얼라이저 변수를 가져오는것
+        serializer = TourlistSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @extend_schema(summary="tour_list_detail API")
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = TourlistdetailSerializer(instance)
+        return Response(serializer.data)
+        
+    @extend_schema(request=SearchThemeSerializer, summary="tour_seach_theme API")
+    @action(methods=['POST'], detail=False)
+    def seach_theme(self,request):
+        theme = request.data.get('theme')
+        
+        if theme:
+            res=Tour.objects.filter(tour_theme=theme)
+            serializer=TourlistSerializer(res,many=True)
+            return Response(serializer.data)
+        return Response('worng val')
 
 
 @extend_schema(tags=["api"], summary="리뷰 API", description="리뷰 API")

@@ -26,7 +26,7 @@ class Tour(models.Model):
         on_delete=models.CASCADE,
         to_field="username", 
         )
-    tour_name = models.CharField(max_length=50)
+    tour_name = models.CharField(max_length=50,unique=True)
     tour_desc = models.CharField(max_length=300, blank=True, null=True)
     tour_img = models.ImageField(default='media/default_tour.jpg')
     start_time = models.DateTimeField()

@@ -28,12 +28,12 @@ from user.serializers import (
 class UserViewsets(viewsets.ModelViewSet):
     queryset=User.objects.all()
     serializer_class=UserSerializer
-    # parser_classes('multipart/form-data')
+
     @extend_schema(request=CheckUsernameSerializer,summary="중복확인 API")
     @action(methods=['POST'], detail=False)
     def double_check(self,request):
         
-        username=request.data.get('username')#리퀘스트에있는 시리얼라이저 변수를 가져오는것
+        username=request.data.get('username')
         if username:
             if User.objects.filter(username=username).exists():
                 return Response('exist')

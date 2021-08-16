@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import fields, serializers
 from rest_framework.serializers import ModelSerializer
 from rest_framework.utils import field_mapping
 
@@ -20,19 +20,32 @@ class ReservSerializer(ModelSerializer):
         model=Reserv
         fields='__all__'
 
-class TourlistSerializer(serializers.Serializer):
-    tour_name = serializers.CharField()
-    tour_img = serializers.ImageField()
-    start_time = serializers.DateTimeField()
-    end_time = serializers.DateTimeField()
-    tour_addr = serializers.CharField()
+class TourlistSerializer(ModelSerializer):
+    class Meta:
+        model=Tour
+        fields=(
+            'tour_name',
+            'tour_img',
+            'start_time',
+            'end_time',
+            'tour_addr', 
+            'tour_theme',
+        )
 
-class TourlistdetailSerializer(serializers.Serializer):
-    tour_name = serializers.CharField()
-    tour_desc = serializers.CharField()
-    tour_img = serializers.ImageField()
-    tour_desc = serializers.CharField()
-    start_time = serializers.DateTimeField()
-    end_time = serializers.DateTimeField()
-    tour_addr = serializers.CharField()
-    tour_phone_num = serializers.CharField()
+class TourlistdetailSerializer(ModelSerializer):
+    class Meta:
+        model=Tour
+        fields=(
+            'tour_name',
+            'tour_desc', 
+            'tour_img',
+            'tour_desc',
+            'start_time',
+            'end_time',
+            'tour_addr', 
+            'tour_phone_num',
+        )
+        lookup_field = "tour_name"
+
+class SearchThemeSerializer(serializers.Serializer):
+    theme=serializers.CharField()
