@@ -19,6 +19,7 @@ from backend_api.serializers import (
     ReservSerializer,
     TourlistSerializer,
     TourlistdetailSerializer,
+    TourCreateSerializer,
     SearchThemeSerializer,
 )
 
@@ -27,7 +28,14 @@ class TourViewsets(viewsets.ModelViewSet):
     queryset=Tour.objects.all()
     serializer_class=TourSerializer
     lookup_field='tour_name'
-    
+
+    @extend_schema(request=TourCreateSerializer, summary="tour_create API")
+    def create(self, request, *args, **kwargs):
+        serializer = TourCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
+
+
     @extend_schema(summary="tour_list API")
     @action(methods=['GET'], detail=False)
     def show_list(self,request):
@@ -67,5 +75,22 @@ class ReviewViewsets(viewsets.ModelViewSet):
 class ReservViewsets(viewsets.ModelViewSet):
     queryset=Reserv.objects.all()
     serializer_class=ReservSerializer
-    pass
+
+    @extend_schema(summary="reserv api tour limit update")
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+       
+        Tour_name=request.data['tour'] #post 는 request에서 data 가져옴
+        person_num=request.data['person_num']
+        temp_tour_model=Tour.objects.get(tour_name=Tour_name)
+        
+        if temp_tour_model.tour_person_limit-int(person_num)<0:
+            return Response('over reserv')
+        else:
+            temp_tour_model.tour_person_limit-=int(person_num)
+            temp_tour_model.save()
+
+        self.perform_create(serializer)
+        return Response(serializer.data)
 

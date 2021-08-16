@@ -42,7 +42,7 @@ class UserViewsets(viewsets.ModelViewSet):
                 return Response('ok')
         return Response('wrong val')
 
-    @extend_schema(summary="유저 API", description="현재 로그인한 유저의 이름,전화번호")
+    @extend_schema(summary="유저 API", description="현재 로그인한 유저의 id,이름,전화번호,크레딧")
     @action(methods=['GET'], detail=False)
     def auth_user(self, request):
         qs=request.user

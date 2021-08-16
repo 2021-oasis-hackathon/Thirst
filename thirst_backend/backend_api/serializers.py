@@ -39,13 +39,31 @@ class TourlistdetailSerializer(ModelSerializer):
             'tour_name',
             'tour_desc', 
             'tour_img',
-            'tour_desc',
             'start_time',
             'end_time',
             'tour_addr', 
             'tour_phone_num',
         )
         lookup_field = "tour_name"
+
+class TourCreateSerializer(ModelSerializer):
+    class Meta:
+        model=Tour
+        fields=(
+            'tour_name',
+            'tour_desc', 
+            'tour_img',
+            'start_time',
+            'end_time',
+            'tour_addr', 
+            'tour_phone_num',
+            'tour_time_at_one',
+            'tour_min_person_at_one',
+            'tour_max_person_at_one',
+            'tour_price',
+            'tour_theme',
+            'owner',
+        )
 
 class SearchThemeSerializer(serializers.Serializer):
     theme=serializers.CharField()
