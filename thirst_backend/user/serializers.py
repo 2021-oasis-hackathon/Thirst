@@ -6,7 +6,7 @@ from rest_framework.utils import field_mapping
 
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
-from .models import Owner,Customer,User
+from user.models import Owner,Customer,User
 
 
 class OwnerCreateSerializer(ModelSerializer):

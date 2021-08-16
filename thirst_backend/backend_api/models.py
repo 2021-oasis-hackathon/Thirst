@@ -8,7 +8,6 @@
 from django.db import models
 
 
-
 class DjangoMigrations(models.Model):
     id = models.BigAutoField(primary_key=True)
     app = models.CharField(max_length=255)
@@ -19,31 +18,17 @@ class DjangoMigrations(models.Model):
         managed = False
         db_table = 'django_migrations'
 
-
-class Reserv(models.Model):
-    reserv_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey('user.Customer', models.DO_NOTHING)
-    tour = models.ForeignKey('Tour', models.DO_NOTHING)
-    reserv_time = models.DateTimeField()
-    person_num = models.PositiveIntegerField()
-
-
-class Review(models.Model):
-    review_num = models.AutoField(primary_key=True)
-    user = models.ForeignKey('user.Customer', models.DO_NOTHING)
-    tour = models.ForeignKey('Tour', models.DO_NOTHING)
-    comment = models.CharField(max_length=300, blank=True, null=True)
-    time = models.DateTimeField()
-    review_img = models.CharField(max_length=100, blank=True, null=True)
-
-
-
 class Tour(models.Model):
     tour_id = models.AutoField(primary_key=True)
-    owner = models.ForeignKey('user.Owner', models.DO_NOTHING)
+    owner = models.ForeignKey(
+        'user.Owner', 
+        related_name="Own_tour", 
+        on_delete=models.CASCADE,
+        to_field="username", 
+        )
     tour_name = models.CharField(max_length=50)
     tour_desc = models.CharField(max_length=300, blank=True, null=True)
-    tour_img = models.CharField(max_length=100, blank=True, null=True)
+    tour_img = models.ImageField(default='media/default_tour.jpg')
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     tour_addr = models.CharField(max_length=100)
@@ -54,3 +39,42 @@ class Tour(models.Model):
     tour_max_person_at_one = models.PositiveIntegerField()
     tour_price = models.PositiveIntegerField()
     tour_theme = models.CharField(max_length=50, blank=True, null=True)
+
+class Reserv(models.Model):
+    reserv_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(
+        'user.Customer',
+        related_name="Cus_reserv", 
+        on_delete=models.CASCADE, 
+        to_field="username", 
+        )
+    tour = models.ForeignKey(
+        Tour, 
+        related_name="Tour_reserv", 
+        on_delete=models.CASCADE, 
+        db_column="tour_id"
+        )
+    reserv_time = models.DateTimeField()
+    person_num = models.PositiveIntegerField()
+
+
+class Review(models.Model):
+    review_num = models.AutoField(primary_key=True)
+    user = models.ForeignKey(
+        'user.Customer', 
+        related_name="Cus_review", 
+        on_delete=models.CASCADE,
+        to_field="username",  
+        )
+    tour = models.ForeignKey(
+        Tour,
+        related_name="tour_review", 
+        on_delete=models.CASCADE, 
+        )
+    comment = models.CharField(max_length=300, blank=True, null=True)
+    time = models.DateTimeField()
+    review_img = models.CharField(max_length=100, blank=True, null=True)
+
+
+
+

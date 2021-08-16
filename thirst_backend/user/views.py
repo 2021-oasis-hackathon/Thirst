@@ -4,7 +4,7 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework import request
 from rest_framework import response
-from rest_framework.decorators import action, permission_classes
+from rest_framework.decorators import action, parser_classes, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -28,11 +28,12 @@ from user.serializers import (
 class UserViewsets(viewsets.ModelViewSet):
     queryset=User.objects.all()
     serializer_class=UserSerializer
-
+    # parser_classes('multipart/form-data')
     @extend_schema(request=CheckUsernameSerializer,summary="중복확인 API")
     @action(methods=['POST'], detail=False)
     def double_check(self,request):
-        username=request.data.get('username')
+        
+        username=request.data.get('username')#리퀘스트에있는 시리얼라이저 변수를 가져오는것
         if username:
             if User.objects.filter(username=username).exists():
                 return Response('exist')
@@ -45,8 +46,6 @@ class UserViewsets(viewsets.ModelViewSet):
 class CustomerViewsets(viewsets.ModelViewSet):
     queryset=Customer.objects.all()
     serializer_class=CustomerSerializer
-
-
 
     def get_serializer_class(self):
         if self.request.method in ['GET']:
