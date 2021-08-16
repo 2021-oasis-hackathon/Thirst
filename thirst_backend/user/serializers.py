@@ -66,6 +66,12 @@ class UserSerializer(ModelSerializer):
 class CheckUsernameSerializer(serializers.Serializer):
     username=serializers.CharField()
 
-class NamePhoneSerializer(serializers.Serializer):
-    name=serializers.CharField()
-    phone=serializers.CharField()
+class UserinfoSerializer(ModelSerializer):
+    class Meta:
+        model=User
+        fields=(
+            'username',
+            'name',
+            'phone',
+            'credit'
+        )

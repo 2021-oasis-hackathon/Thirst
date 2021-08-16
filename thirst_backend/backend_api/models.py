@@ -54,8 +54,10 @@ class Reserv(models.Model):
         on_delete=models.CASCADE, 
         db_column="tour_id"
         )
+    review_title = models.CharField(max_length=50,null=False)
     reserv_time = models.DateTimeField()
     person_num = models.PositiveIntegerField()
+    Satisfaction = models.PositiveIntegerField()
 
 
 class Review(models.Model):

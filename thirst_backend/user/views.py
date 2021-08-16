@@ -21,7 +21,7 @@ from user.serializers import (
     CustomerSerializer,
     OwnerSerializer,
     UserSerializer,
-    NamePhoneSerializer,
+    UserinfoSerializer,
 )
 
 @permission_classes([AllowAny])
@@ -47,7 +47,7 @@ class UserViewsets(viewsets.ModelViewSet):
     def auth_user(self, request):
         qs=request.user
         if request.user.is_authenticated:
-            serializer = NamePhoneSerializer(qs, many=False)
+            serializer = UserinfoSerializer(qs, many=False)
             return Response(serializer.data)
 
 @permission_classes([AllowAny])
