@@ -1,7 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework.utils import field_mapping
 
-from django.contrib.auth.hashers import make_password
 from backend_api.models import Tour,Review,Reserv
 
 

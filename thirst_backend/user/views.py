@@ -8,7 +8,6 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from drf_spectacular.views import extend_schema, OpenApiTypes, OpenApiParameter
 from user.models import (
-    User,
     Customer,
     Owner,
 )
@@ -18,6 +17,8 @@ from .serializers import (
     CustomerSerializer,
     OwnerSerializer,
 )
+
+
 
 @permission_classes([AllowAny])
 @extend_schema(tags=["api"], summary="이용자 API", description="이용자 API")
@@ -31,7 +32,7 @@ class CustomerViewsets(viewsets.ModelViewSet):
         elif self.request.method in ['POST']:
             return CustomerCreateSerializer
         return CustomerSerializer
-    pass
+
 
 @permission_classes([AllowAny])
 @extend_schema(tags=["api"], summary="사업자 API", description="사업자 API")
