@@ -14,20 +14,21 @@ import {
 
 import {bold, plane} from '../../assets/font';
 
-import {UserLogin} from '../../redux/action/index';
+import {GetUser, UserLogin} from '../../redux/action/index';
 import {ScrollView} from 'react-native-gesture-handler';
 import {lgreen} from '../../assets/color';
 
 import url from '../../url';
 import axios from 'axios';
 
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 //import * as KakaoLogins from '@react-native-seoul/kakao-login';
 
 const {width, height} = Dimensions.get('window');
 
 const Login = ({navigation}) => {
+  const user = useSelector(state => state.user);
   const [id, setId] = useState('');
   const [passwd, setPasswd] = useState('');
   const [secretpasswd, setSecretpasswd] = useState('');
@@ -36,6 +37,27 @@ const Login = ({navigation}) => {
   const dispatch = useDispatch();
 
   useEffect(() => {}, []);
+
+  const getUserInfo = async token => {
+    console.log(user);
+    await axios
+      .get(`${url}/user/User/auth_user/`, {
+        headers: {
+          Authorization: `Bearer ${token.access}`,
+        },
+      })
+      .then(res => {
+        if (res.data) {
+          let data = res.data;
+          console.log('왜이래');
+          console.log(res.data);
+          dispatch(GetUser(data));
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
 
   const onLogin = async () => {
     //확인
@@ -49,14 +71,16 @@ const Login = ({navigation}) => {
 
       body.append('username', id.toLowerCase());
       body.append('password', passwd.toLowerCase());
-
+      console.log(body);
       await axios
         .post(`${url}/user/token/`, body)
         .then(res => {
           if (res.data) {
             //asyncstorage에 아이디 저장
+            console.log(res.data);
             Alert.alert('환영합니다!', '로그인에 성공하였습니다.');
             dispatch(UserLogin(res.data));
+            getUserInfo(res.data);
           } else {
             Alert.alert(
               '아이디 혹은 비밀번호가 잘못되었습니다. 다시 시도해주세요.',
