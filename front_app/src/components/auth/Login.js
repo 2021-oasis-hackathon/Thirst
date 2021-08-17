@@ -49,7 +49,6 @@ const Login = ({navigation}) => {
       .then(res => {
         if (res.data) {
           let data = res.data;
-          console.log('왜이래');
           console.log(res.data);
           dispatch(GetUser(data));
         }
