@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {white} from 'chalk';
 import React, {useEffect, useRef, useState} from 'react';
 import {
@@ -8,11 +9,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
+import {useSelector} from 'react-redux';
 
 import {lgreen} from '../../assets/color';
 import {bold, plane} from '../../assets/font';
 
 import style from '../../assets/style';
+import url from '../../url';
 
 const {width, height} = Dimensions.get('window');
 
@@ -45,15 +48,14 @@ const testData = [
     total: 7,
   },
 ];
-const info = {
-  name: '감자 수확 체험',
-  price: 10000,
-};
 
-function Scheduler({navigation}) {
-  const [dataList, setDataList] = useState({});
+function Scheduler({navigation, route}) {
+  const user = useSelector(state => state.user);
+  const [dateList, setDateList] = useState({});
   const [selectList, setSelectList] = useState({});
-  const [barLocation, setbarLocation] = useState(0);
+  const [cache, setCache] = useState({});
+
+  const info = route.params.info;
   const scrollRef = useRef(null);
 
   const renderItem = (item, day) => {
@@ -65,16 +67,15 @@ function Scheduler({navigation}) {
             key={`${day}-${index}`}
             onPress={() => {
               navigation.navigate('Reservation', {
-                name: info.name,
-                price: info.price,
+                info: info,
                 time: i.time,
                 date: day,
-                remain: 5,
+                remain: info.tour_max_person_at_one - 0,
               });
             }}>
             <Text style={styles.itemTime}>{i.time}</Text>
             <Text style={styles.itemPerson}>
-              {i.remain}/{i.total}
+              {i.remain}/{info.tour_max_person_at_one}
             </Text>
           </TouchableOpacity>
         );
@@ -92,7 +93,53 @@ function Scheduler({navigation}) {
     setSelectList(sortedList);
   };
 
-  const makeBarItems = () => {
+  const getSchedule = async date => {
+    let body = new FormData();
+    body.append('date', date);
+    await axios
+      .post(`${url}/`, body, {
+        headers: {
+          Authorization: `Bearer ${user.token.access}`,
+        },
+      })
+      .then(res => {
+        if (res.data) {
+        }
+      });
+  };
+
+  const getDates = async date => {
+    if (cache[data]) {
+      return;
+    }
+    let body = new FormData();
+    body.append('date', date);
+
+    await axios
+      .post(`${url}/`, body, {
+        headers: {
+          Authorization: `Bearer ${user.token.access}`,
+        },
+      })
+      .then(res => {
+        if (res.data) {
+          let dates = {...dateList};
+          dates[key] = {
+            date: key,
+            data: res.data,
+            checked: true,
+            day: dayArray[day],
+          };
+
+          setDateList({...dates});
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  const initDates = async () => {
     const today = new Date();
     let date = today.getDate();
     let month = today.getMonth() + 1;
@@ -100,30 +147,45 @@ function Scheduler({navigation}) {
     let datas = {};
     let select = {};
 
-    for (let i = 0; i < 14; i++) {
+    for (let i = 0; i < 5; i++) {
       let key = `${month}/${date}`;
-      datas[key] = {
-        date: date,
-        data: i % 2 == 0 ? testData : [],
-        checked: i < 4 ? true : false,
-        day: dayArray[day],
-      };
+      let body = {};
+      body.append('date', key);
+      await axios
+        .post(`${url}/`, body, {
+          headers: {
+            Authorization: `Bearer ${user.token.access}`,
+          },
+        })
+        .then(res => {
+          if (res.data) {
+            dates[key] = {
+              date: key,
+              data: res.data,
+              checked: true,
+              day: dayArray[day],
+            };
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+
       date = date + 1;
       day = (day + 1) % 7;
       if (date == 32) {
         date = 1;
         month = month + 1;
       }
-      if (i < 4) select[key] = datas[key].data;
+      select[key] = datas[key].data;
     }
 
-    setDataList(datas);
-
+    setDateList(datas);
     setSelectList(select);
   };
 
   useEffect(() => {
-    makeBarItems();
+    initDates();
   }, []);
 
   if (!dataList)
@@ -147,11 +209,12 @@ function Scheduler({navigation}) {
               <TouchableOpacity
                 key={key}
                 onPress={() => {
-                  let datas = {...dataList};
-                  datas[key].checked = !datas[key].checked;
-                  setDataList(datas);
+                  let dates = {...dateList};
+                  dates[key].checked = !dates[key].checked;
+                  setDateList(dates);
+
                   let select = {...selectList};
-                  if (datas[key].checked) select[key] = datas[key].data;
+                  if (dates[key].checked) select[key] = dates[key].data;
                   else delete select[key];
                   sortItems(select);
                 }}>
@@ -184,26 +247,25 @@ function Scheduler({navigation}) {
           </View>
         </View>
         <View style={[styles.bar]} />
-        <View style={{alignItems: 'center', height: height - 100}}>
-          <ScrollView
-            contentContainerStyle={styles.itemScroll}
-            ref={scrollRef}
-            onContentSizeChange={() => {
-              // console.log(itemScroll);
-              scrollRef.current.scrollToEnd({animated: true});
-            }}>
-            {Object.entries(selectList).map(([key, value]) => (
-              <View key={`item${key}`} style={[styles.day, style.row]}>
-                <View style={styles.dateView}>
-                  <Text style={styles.date}>{key}</Text>
-                </View>
-                <View style={[styles.items, style.row]}>
-                  {renderItem(value, key)}
-                </View>
+
+        <ScrollView
+          contentContainerStyle={styles.itemScroll}
+          ref={scrollRef}
+          onContentSizeChange={() => {
+            // console.log(itemScroll);
+            scrollRef.current.scrollToEnd({animated: true});
+          }}>
+          {Object.entries(selectList).map(([key, value]) => (
+            <View key={`item${key}`} style={[styles.day, style.row]}>
+              <View style={styles.dateView}>
+                <Text style={styles.date}>{key}</Text>
               </View>
-            ))}
-          </ScrollView>
-        </View>
+              <View style={[styles.items, style.row]}>
+                {renderItem(value, key)}
+              </View>
+            </View>
+          ))}
+        </ScrollView>
       </View>
     );
 }
@@ -262,9 +324,7 @@ const styles = StyleSheet.create({
     backgroundColor: lgreen,
     color: 'white',
   },
-  itemScroll: {
-    flexWrap: 'wrap',
-  },
+  itemScroll: {},
   items: {
     backgroundColor: 'white',
     width: width - 60,
