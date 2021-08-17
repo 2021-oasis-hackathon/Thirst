@@ -14,6 +14,7 @@ import {
 import {lgreen} from '../../assets/color';
 
 import {bold, plane} from '../../assets/font';
+import axios from 'axios';
 
 const {width, height} = Dimensions.get('window');
 
@@ -37,8 +38,28 @@ const Register = ({navigation}) => {
         },
       ]);
     } else {
+      let body = new FormData();
+
+      body.append('username', id);
+
+      console.log(body);
+      await axios
+        .post(`${url}/user/User/double_check/`, body)
+        .then(res => {
+          console.log(res.data);
+          if (res.data === 'ok') {
+            Alert.alert('사용 가능한 아이디입니다.');
+            setIdCheck(true);
+          } else {
+            Alert.alert('중복된 아이디입니다.');
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   };
+
   const oncheck = () => {
     if (id == '') {
       setErr('아이디를 입력해주세요.');
@@ -76,19 +97,30 @@ const Register = ({navigation}) => {
     return true;
     //axios코드
   };
+
   const onSignIn = async () => {
     if (!oncheck()) return;
 
-    let body = {
-      id: id.toLowerCase(),
-      passwd: passwd,
-      name: name,
-      address: address,
-      phone: phone,
-      birth: birth,
-      nickname: nick,
-      message: '',
-    };
+    let body = new FormData();
+    body.append('username', id.toLocaleLowerCase());
+    body.append('password', passwd);
+    body.append('name', name);
+    body.append('phone', phone);
+
+    await axios
+      .post(`${url}/user/Customer/`, body)
+      .then(res => {
+        console.log(res.data);
+        if (res.data) {
+          Alert.alert('어서오세요! 농촌체험 어플 촌스러운입니다.');
+          navigation.navigate('Login');
+        } else {
+          Alert.alert('회원가입에 실패하였습니다. ㅠㅠ \n 다시 시도해주세요.');
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   return (
@@ -167,8 +199,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headContainer: {
-    borderBottomWidth: 3,
-    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E1E1E1',
     marginTop: width / 20,
   },
   head: {
