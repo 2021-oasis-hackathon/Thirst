@@ -30,6 +30,7 @@ class TourlistSerializer(ModelSerializer):
             'end_time',
             'tour_addr', 
             'tour_theme',
+            'tour_phone_num',
         )
 
 class TourlistdetailSerializer(ModelSerializer):
@@ -68,6 +69,10 @@ class TourCreateSerializer(ModelSerializer):
 
 class SearchThemeSerializer(serializers.Serializer):
     theme=serializers.CharField()
+    Area=serializers.CharField()
 
 class SearchAreaSerializer(serializers.Serializer):
     Area=serializers.CharField()
+
+class FindMyReservSerializer(serializers.Serializer):
+    myname=serializers.CharField()

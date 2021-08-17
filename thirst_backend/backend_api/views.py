@@ -4,6 +4,7 @@ from django.utils import translation
 # from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework.decorators import action, api_view
+from rest_framework.generics import RetrieveDestroyAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -22,6 +23,7 @@ from backend_api.serializers import (
     TourCreateSerializer,
     SearchThemeSerializer,
     SearchAreaSerializer,
+    FindMyReservSerializer,
 )
 
 @extend_schema(tags=["api"], summary="관광지 API", description="관광지 API")
@@ -108,3 +110,17 @@ class ReservViewsets(viewsets.ModelViewSet):
         self.perform_create(serializer)
         return Response(serializer.data)
 
+    @extend_schema(request=FindMyReservSerializer, summary="Find_my_reserv API")
+    @action(methods=['POST'], detail=False)
+    def FindMyReserv(self,request):
+        Myname=request.data.get('myname')
+        Reservqs=Reserv.objects.filter(user=Myname)
+        tourlistser=TourlistSerializer
+        ret=list()
+        for reser in Reservqs:
+            # print(reser.person_num)#외래키는 그냥 해당 키 모델로 올라가버림
+            ret.append(tourlistser(reser.tour).data)
+
+        return Response(ret)
+        pass
+  
