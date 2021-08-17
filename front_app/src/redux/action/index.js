@@ -27,6 +27,7 @@ export const GetUser = data => {
       name: data.name,
       phone: data.phone,
       username: data.username,
+      credit: data.credit,
     });
   };
 };
