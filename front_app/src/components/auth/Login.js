@@ -14,9 +14,14 @@ import {
 
 import {bold, plane} from '../../assets/font';
 
-//import {checkLogin} from '../../redux/actions';
+import {UserLogin} from '../../redux/action/index';
 import {ScrollView} from 'react-native-gesture-handler';
 import {lgreen} from '../../assets/color';
+
+import url from '../../url';
+import axios from 'axios';
+
+import {useDispatch} from 'react-redux';
 
 //import * as KakaoLogins from '@react-native-seoul/kakao-login';
 
@@ -28,6 +33,8 @@ const Login = ({navigation}) => {
   const [secretpasswd, setSecretpasswd] = useState('');
   const [checkPoint, setCheckPoint] = useState(false);
 
+  const dispatch = useDispatch();
+
   useEffect(() => {}, []);
 
   const onLogin = async () => {
@@ -36,18 +43,32 @@ const Login = ({navigation}) => {
       Alert.alert(
         '실패',
         '아이디 혹은 비밀번호가 잘못됐습니다.\n다시 확인해주세요.',
-        [
-          {
-            text: '확인',
-            style: 'cancel',
-          },
-        ],
       );
     } else {
-      let body = {
-        id: id.toLowerCase(),
-        passwd: passwd,
-      };
+      let body = new FormData();
+
+      body.append('username', id.toLowerCase());
+      body.append('password', passwd.toLowerCase());
+
+      await axios
+        .post(`${url}/user/token/`, body)
+        .then(res => {
+          if (res.data) {
+            //asyncstorage에 아이디 저장
+            Alert.alert('환영합니다!', '로그인에 성공하였습니다.');
+            dispatch(UserLogin(res.data));
+          } else {
+            Alert.alert(
+              '아이디 혹은 비밀번호가 잘못되었습니다. 다시 시도해주세요.',
+            );
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          Alert.alert(
+            '아이디 혹은 비밀번호가 잘못되었습니다. 다시 시도해주세요.',
+          );
+        });
     }
   };
 
@@ -57,7 +78,7 @@ const Login = ({navigation}) => {
         source={require('../../assets/loginLogo.png')}
         style={{
           width: width / 2,
-          height: width / 5,
+          height: width / 4,
           marginBottom: 50,
           marginTop: width / 3,
         }}

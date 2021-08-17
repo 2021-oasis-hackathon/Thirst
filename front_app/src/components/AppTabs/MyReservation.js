@@ -65,25 +65,29 @@ const testData = {
     time: '15:00',
     location: '농가 마을',
     phone: '010-0000-0000',
+    id: 1,
   },
   '8/17': {
     time: '15:10',
     location: '갯벌 바다',
     phone: '010-0000-0000',
+    id: 2,
   },
   '8/18': {
     time: '15:00',
     location: '갯벌 바다',
     phone: '010-0000-0000',
+    id: 3,
   },
   '8/19': {
     time: '15:00',
     location: '갯벌 바다',
     phone: '010-0000-0000',
+    id: 4,
   },
 };
 
-function MyReservation(props) {
+function MyReservation({navigation}) {
   const [reservList, setReservList] = useState(null);
   useEffect(() => {
     /*
@@ -156,7 +160,11 @@ function MyReservation(props) {
                   {value.phone}
                   {'\n'}
                 </Text>
-                <TouchableOpacity style={styles.reviewButton}>
+                <TouchableOpacity
+                  style={styles.reviewButton}
+                  onPress={() => {
+                    navigation.navigate('ReviewWriter', {id: value.id});
+                  }}>
                   <Text style={styles.reviewText}>후기작성</Text>
                 </TouchableOpacity>
               </View>
