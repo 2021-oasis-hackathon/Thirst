@@ -21,6 +21,7 @@ from backend_api.serializers import (
     TourlistdetailSerializer,
     TourCreateSerializer,
     SearchThemeSerializer,
+    SearchAreaSerializer,
 )
 
 @extend_schema(tags=["api"], summary="관광지 API", description="관광지 API")
@@ -33,6 +34,7 @@ class TourViewsets(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = TourCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
         return Response(serializer.data)
 
 
@@ -54,15 +56,27 @@ class TourViewsets(viewsets.ModelViewSet):
         serializer = TourlistdetailSerializer(instance)
         return Response(serializer.data)
         
-    @extend_schema(request=SearchThemeSerializer, summary="tour_seach_theme API")
+    @extend_schema(request=SearchThemeSerializer, summary="tour_search_theme API")
     @action(methods=['POST'], detail=False)
-    def seach_theme(self,request):
+    def search_theme(self,request):
         theme = request.data.get('theme')
         if theme:
-            res=Tour.objects.filter(tour_theme=theme)
+            res=Tour.objects.filter(tour_theme_contains=theme)
             serializer=TourlistSerializer(res,many=True)
             return Response(serializer.data)
         return Response('worng val')
+    
+    @extend_schema(request=SearchAreaSerializer, summary="tour_search_Area API")
+    @action(methods=['POST'], detail=False)
+    def search_Area(self,request):
+        Area_name = request.data.get('Area')
+        if Area_name:
+            res=Tour.objects.filter(tour_addr__contains=Area_name)
+            serializer=TourlistSerializer(res,many=True)
+            return Response(serializer.data)
+        return Response('worng val')
+
+
 
 
 @extend_schema(tags=["api"], summary="리뷰 API", description="리뷰 API")

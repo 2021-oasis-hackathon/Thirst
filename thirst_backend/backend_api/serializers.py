@@ -60,6 +60,7 @@ class TourCreateSerializer(ModelSerializer):
             'tour_time_at_one',
             'tour_min_person_at_one',
             'tour_max_person_at_one',
+            'tour_person_limit',
             'tour_price',
             'tour_theme',
             'owner',
@@ -67,3 +68,6 @@ class TourCreateSerializer(ModelSerializer):
 
 class SearchThemeSerializer(serializers.Serializer):
     theme=serializers.CharField()
+
+class SearchAreaSerializer(serializers.Serializer):
+    Area=serializers.CharField()
