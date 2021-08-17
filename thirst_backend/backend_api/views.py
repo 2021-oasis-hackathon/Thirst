@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.utils import translation
-
+import datetime
 # from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework.decorators import action, api_view
@@ -79,8 +79,6 @@ class TourViewsets(viewsets.ModelViewSet):
         return Response('worng val')
 
 
-
-
 @extend_schema(tags=["api"], summary="리뷰 API", description="리뷰 API")
 class ReviewViewsets(viewsets.ModelViewSet):
     queryset=Review.objects.all()
@@ -116,11 +114,16 @@ class ReservViewsets(viewsets.ModelViewSet):
         Myname=request.data.get('myname')
         Reservqs=Reserv.objects.filter(user=Myname)
         tourlistser=TourlistSerializer
+        
         ret=list()
         for reser in Reservqs:
             # print(reser.person_num)#외래키는 그냥 해당 키 모델로 올라가버림
-            ret.append(tourlistser(reser.tour).data)
+            Reserv_time=reser.reserv_time
+            # print(Reserv_time.strftime('%Y-%m-%d %H:%M'))
+            tempdict={'Reserv_time':Reserv_time.strftime('%Y-%m-%d %H:%M')}
 
+            tempdict.update(tourlistser(reser.tour).data)
+            ret.append(tempdict)
         return Response(ret)
-        pass
+
   

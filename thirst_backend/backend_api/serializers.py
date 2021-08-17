@@ -18,7 +18,12 @@ class ReviewSerializer(ModelSerializer):
 class ReservSerializer(ModelSerializer):
     class Meta:
         model=Reserv
-        fields='__all__'
+        fields=(
+            'reserv_time',
+            'person_num',
+            'user',
+            'tour',
+        )
 
 class TourlistSerializer(ModelSerializer):
     class Meta:
