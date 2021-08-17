@@ -86,7 +86,7 @@ class Review(models.Model):
     review_title = models.CharField(max_length=50,null=False)
     comment = models.CharField(max_length=300, blank=True, null=True)
     time = models.DateTimeField()
-    review_img = models.CharField(max_length=100, blank=True, null=True)
+    review_img = models.ImageField(default='media/default_tour.jpg')
     Satisfaction = models.PositiveIntegerField()
 
 
