@@ -101,4 +101,4 @@ class ReservonedaySerializer(ModelSerializer):
 
 class FindReservonedaySerializer(serializers.Serializer):
     tour_name=serializers.CharField()
-    reserv_time=serializers.DateTimeField()
+    reserv_time=serializers.DateTimeField(format=['%Y-%m-%d'])

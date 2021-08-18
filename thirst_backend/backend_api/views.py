@@ -66,7 +66,7 @@ class TourViewsets(viewsets.ModelViewSet):
     def search_theme(self,request):
         theme = request.data.get('theme')
         if theme:
-            res=Tour.objects.filter(tour_theme_contains=theme)
+            res=Tour.objects.filter(tour_theme__contains=theme)
             serializer=TourlistSerializer(res,many=True)
             return Response(serializer.data)
         return Response('worng val')
@@ -168,7 +168,7 @@ class ReservViewsets(viewsets.ModelViewSet):
         tour_name=request.data.get('tour_name')
         reserv_time=request.data.get('reserv_time')
         if tour_name and reserv_time:
-            queryset=ReservOneday.objects.filter(tour_name=tour_name,reserv_time=reserv_time)
+            queryset=ReservOneday.objects.filter(tour_name=tour_name,reserv_time__contains=reserv_time)
             if queryset:
                 reserv_detailser=ReservonedaySerializer(queryset,many=True)
                 return Response(reserv_detailser.data)
