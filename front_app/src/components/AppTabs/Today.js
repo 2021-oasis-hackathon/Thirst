@@ -1,4 +1,5 @@
-import React from 'react';
+import axios from 'axios';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -8,82 +9,95 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
+import {useSelector} from 'react-redux';
 import {ogreen} from '../../assets/color';
 import {bold, plane} from '../../assets/font';
 
+import {media, url} from '../../url';
+import Loading from './Loading';
+
 const {width, height} = Dimensions.get('window');
 
-const data = [
-  {
-    title: '아름다운 벼농장',
-    writer: '발견했어요',
-    uri: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMDEwMDlfMTUw%2FMDAxNjAyMjIyOTA0MzMz.fGo98gTnOHnNMzTHPIOhqMx4oMdb5y0bVvcTaZ0rZ9og.G8QEJdkHbNhVGeSMgJZeAnhknSwUyPlUEaQrE1ZtHTEg.JPEG.eemeelee%2F1602222904458.jpg&type=sc960_832',
-    comments: '아름다운 벼농장을 발견했어요\n 확인해주세요!',
-    location: '농촌 벼 체험장',
-    period: '3/1~ 11-31',
-    date: '2021-08-13',
-  },
-  {
-    title: '아름다운 벼농장',
-    writer: '발견했어요',
-    uri: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMDEwMDlfMTUw%2FMDAxNjAyMjIyOTA0MzMz.fGo98gTnOHnNMzTHPIOhqMx4oMdb5y0bVvcTaZ0rZ9og.G8QEJdkHbNhVGeSMgJZeAnhknSwUyPlUEaQrE1ZtHTEg.JPEG.eemeelee%2F1602222904458.jpg&type=sc960_832',
-    comments: '아름다운 벼농장을 발견했어요\n 확인해주세요!',
-    location: '농촌 벼 체험장',
-    period: '3/1~ 11-31',
-    date: '2021-08-13',
-  },
-];
+function Today({navigation, route}) {
+  const user = useSelector(state => state.user);
+  const [list, setList] = useState(null);
 
-function Today(props) {
-  return (
-    <View style={styles.container}>
-      <ScrollView
-        style={styles.reviews}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}>
-        {data.map((item, index) => {
-          return (
-            <View key={index} style={styles.review}>
-              <View style={[styles.header, styles.row]}>
-                <View style={styles.row}>
+  const getList = async () => {
+    await axios
+      .get(`${url}/Review/`, {
+        headers: {
+          Authorization: `Bearer ${user.token.access}`,
+        },
+      })
+      .then(res => {
+        console.log(res.data);
+        setList(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    getList();
+  }, []);
+
+  useEffect(() => {
+    getList();
+  }, [route.params]);
+
+  if (list)
+    return (
+      <View style={styles.container}>
+        <ScrollView
+          style={styles.reviews}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}>
+          {list.map((item, index) => {
+            return (
+              <View key={index} style={styles.review}>
+                <View style={[styles.header, styles.row]}>
+                  <View style={styles.spacebetween}>
+                    <View style={styles.row}>
+                      <Image
+                        source={require('../../assets/bori.png')}
+                        style={styles.icon}
+                      />
+                      <Text style={styles.title}> {item.review_title}</Text>
+                    </View>
+                    <Text style={styles.date}>{item.time.split('T')[0]}</Text>
+                  </View>
+                  <Text style={styles.date}>{item.date}</Text>
+                </View>
+                <View style={styles.column}>
                   <Image
-                    source={require('../../assets/bori.png')}
-                    style={styles.icon}
+                    source={{uri: `${item.review_img}`}}
+                    style={styles.image}
                   />
-                  <Text style={styles.title}> {item.title}</Text>
-                </View>
-                <Text style={styles.date}>{item.date}</Text>
-              </View>
-              <View style={styles.column}>
-                <Image
-                  source={{
-                    uri: item.uri,
-                  }}
-                  style={styles.image}
-                />
-                <View style={styles.row}>
-                  <View style={[styles.column, {marginLeft: 5}]}>
-                    <Text style={styles.bold}>운영장소</Text>
-                    <Text style={[styles.bold, {marginTop: 5}]}>운영기간</Text>
-                  </View>
-                  <View style={[styles.column, {marginLeft: 10}]}>
-                    <Text style={styles.bold}>{item.location}</Text>
-                    <Text style={[styles.bold, {marginTop: 5}]}>
-                      {item.period}
-                    </Text>
+                  <View style={styles.row}>
+                    <View style={[styles.column, {marginLeft: 5}]}>
+                      <Text style={styles.bold}>체험장</Text>
+                      <Text style={[styles.bold, {marginTop: 5}]}>만족도</Text>
+                    </View>
+                    <View style={[styles.column, {marginLeft: 10}]}>
+                      <Text style={styles.bold}>{item.tour}</Text>
+                      <Text style={[styles.bold, {marginTop: 5}]}>
+                        {item.Satisfaction}
+                      </Text>
+                    </View>
                   </View>
                 </View>
+                <View style={[styles.contents, styles.column]}>
+                  <Text style={styles.comments}> {item.comment}</Text>
+                  <Text style={styles.writer}> 작성자 {item.user}</Text>
+                </View>
               </View>
-              <View style={[styles.contents, styles.column]}>
-                <Text style={styles.comments}> {item.comments}</Text>
-                <Text style={styles.writer}> 작성자 {item.writer}</Text>
-              </View>
-            </View>
-          );
-        })}
-      </ScrollView>
-    </View>
-  );
+            );
+          })}
+        </ScrollView>
+      </View>
+    );
+  else return <Loading />;
 }
 
 export default Today;
@@ -102,6 +116,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ABA730',
     justifyContent: 'space-between',
+  },
+  spacebetween: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    width: width - 90,
   },
   wrap: {
     display: 'flex',
@@ -149,6 +168,7 @@ const styles = StyleSheet.create({
   },
   date: {
     color: '#7F7F7F',
+    textAlign: 'right',
   },
   image: {
     width: 300,

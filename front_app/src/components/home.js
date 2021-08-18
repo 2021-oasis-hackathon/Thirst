@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import axios from 'axios';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -7,15 +8,26 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import {bold, plane} from '../assets/font';
+import {GetUser} from '../redux/action';
 import Gwangju from './Maps/Gwangju';
 import TodaysReview from './subTabs/todaysReview';
 
 const {width, height} = Dimensions.get('window');
 
 function Home(props) {
+  const user = useSelector(state => state.user);
   const [select, setSelect] = useState(2);
+  const dispatch = useDispatch();
   // 1 = 전북, 2= 광주, 3=전남
+
+  const any = () => {
+    //  console.log('???');
+  };
+  useEffect(() => {
+    // any();
+  }, []);
   return (
     <View style={styles.container}>
       <View style={[styles.nav]}>

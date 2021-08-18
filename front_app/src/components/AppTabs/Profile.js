@@ -13,7 +13,7 @@ import {lgreen} from '../../assets/color';
 import {bold} from '../../assets/font';
 import style from '../../assets/style';
 import {UserLogout} from '../../redux/action';
-import url from '../../url';
+import {url} from '../../url';
 import Loading from './Loading';
 
 const {width, height} = Dimensions.get('window');

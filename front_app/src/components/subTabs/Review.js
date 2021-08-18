@@ -4,6 +4,7 @@ import {ogreen} from '../../assets/color';
 
 import {bold, plane} from '../../assets/font';
 import style from '../../assets/style';
+import {media} from '../../url';
 const {width, height} = Dimensions.get('window');
 
 function Review({name, comments, date, img, satisfaction}) {
@@ -24,7 +25,7 @@ function Review({name, comments, date, img, satisfaction}) {
         <Text style={styles.date}>{date}</Text>
       </View>
       <View style={[style.row]}>
-        {img && <Image style={styles.img} source={{uri: img}} />}
+        {img && <Image style={styles.img} source={{uri: `${media}${img}`}} />}
         <View style={styles.wrap}>
           <Text style={styles.comments}>{comments}</Text>
           <Text style={[styles.comments, styles.satis]}> 만족도 {heart}</Text>
