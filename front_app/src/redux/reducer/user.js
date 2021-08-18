@@ -12,13 +12,11 @@ const initialState = {
 
 const user = (state = initialState, action) => {
   if (action.type == USER_LOGIN) {
-    console.log(action.token);
     return {
       ...state,
       token: action.token,
     };
   } else if (action.type == USER_LOGOUT) {
-    console.log(initialState);
     return {
       state: {...initialState},
     };

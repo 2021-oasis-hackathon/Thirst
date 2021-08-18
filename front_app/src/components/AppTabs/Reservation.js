@@ -36,11 +36,11 @@ function Reservation({navigation, route}) {
   const info = route.params.info;
 
   useEffect(() => {
-    console.log(route.params);
+    //console.log(route.params);
   }, []);
 
   const onSubmit = async () => {
-    if (route.params.tour_person_limit < route.params.reserved + num) {
+    if (info.tour_person_limit < route.params.reserved + num) {
       Alert.alert(
         `예약 가능한 잔여인원은 ${
           route.params.tour_person_limit - route.params.reserved

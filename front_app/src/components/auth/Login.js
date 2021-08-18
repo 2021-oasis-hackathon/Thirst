@@ -70,7 +70,6 @@ const Login = ({navigation}) => {
 
       body.append('username', id.toLowerCase());
       body.append('password', passwd.toLowerCase());
-      console.log(body);
       await axios
         .post(`${url}/user/token/`, body)
         .then(res => {
