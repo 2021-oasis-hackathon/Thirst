@@ -14,3 +14,6 @@ def tour_image_path(instance, filename):
 
 def review_image_path(instance, filename):
     return 'api_review/'+instance.review_num + os.path.splitext(filename)[1]
+
+def user_image_path(instance, filename):
+    return 'user_profile/'+instance.username + os.path.splitext(filename)[1]

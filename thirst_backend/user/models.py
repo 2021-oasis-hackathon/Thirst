@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser,UserManager
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
+from thirst_backend.func import user_image_path
 # Create your models here.
 
 class UserManager(UserManager):
@@ -39,9 +40,9 @@ class User(AbstractUser):
         # default=Types.CUSTOMER
     )
     name = models.CharField(max_length=100,unique=True)
-    phone = models.CharField(max_length=13,validators=[RegexValidator(r'^\d{1,10}$')])
+    phone = models.CharField(max_length=13,validators=[RegexValidator(regex = r'[^0-9]*$')])
     credit = models.PositiveIntegerField(default=0)
-    profile_img=models.ImageField(default='user_default.jpg')
+    profile_img=models.ImageField(default='user_profile/user_default.jpg',upload_to=user_image_path)
 
     objects=UserManager()
 
