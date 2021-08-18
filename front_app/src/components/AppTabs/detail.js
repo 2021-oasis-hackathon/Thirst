@@ -17,25 +17,58 @@ import style from '../../assets/style';
 import Loading from './Loading';
 import axios from 'axios';
 import {useSelector} from 'react-redux';
-import url from '../../url';
+import {media, url} from '../../url';
 
 const {width, height} = Dimensions.get('window');
 
 const test = [0, 0, 0, 0, 0, 0];
 
 function Detail({navigation, route}) {
-  const info = route.params.info;
+  const [info, setInfo] = useState(null);
   const user = useSelector(state => state.user);
   const [reviews, setReviews] = useState([]);
 
-  const getReviews = () => {
-    //axios.get(`http://${url}/`
-    //)
+  const getInfo = async () => {
+    console.log(`${url}/Tour`);
+    await axios
+      .get(`${url}/Tour/${route.params.tour_name}`, {
+        headers: {
+          Authorization: `Bearer ${user.token.access}`,
+        },
+      })
+      .then(res => {
+        if (res.data) setInfo(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
+
+  const getReview = async () => {
+    let body = new FormData();
+
+    body.append('tour', route.params.tour_name);
+
+    await axios
+      .post(`${url}/Review/FindTourReview/`, body, {
+        headers: {
+          Authorization: `Bearer ${user.token.access}`,
+        },
+      })
+      .then(res => {
+        console.log(res.data);
+        if (res.data) setReviews(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
-    // console.log(route.params.info);
+    getInfo();
+    getReview();
   }, []);
-  if (reviews)
+  if (info)
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.ScrollView}>
@@ -48,11 +81,15 @@ function Detail({navigation, route}) {
           </View>
           <View style={styles.tour}>
             <View style={[styles.column, {marginBottom: 5}]}>
+              <Text style={styles.tour_name}>{info.tour_name}</Text>
               <View style={[styles.row, {alignItems: 'center'}]}>
                 <TouchableOpacity style={styles.photoChanger}>
                   <Text style={styles.photoText}> {'<'} </Text>
                 </TouchableOpacity>
-                <Image style={styles.img} source={{uri: info.tour_img}} />
+                <Image
+                  style={styles.img}
+                  source={{uri: `${media}${info.tour_img}`}}
+                />
                 <TouchableOpacity style={styles.photoChanger}>
                   <Text style={styles.photoText}> {'>'} </Text>
                 </TouchableOpacity>
@@ -97,14 +134,14 @@ function Detail({navigation, route}) {
           </View>
 
           <View style={styles.review}>
-            {test.map((i, num) => (
+            {reviews.map((i, num) => (
               <Review
-                name="허수아비"
-                comments="재밌어요! 다음에도 친구들이랑 체험하러 가보고 싶어요"
-                date="2020-00-00"
-                satisfaction={5}
+                name={i.user}
+                comments={i.comment}
+                date={i.time.split('T')[0]}
+                satisfaction={i.Satisfaction}
                 key={num}
-                img="https://picsum.photos/700"
+                img={i.review_img}
               />
             ))}
           </View>
@@ -121,6 +158,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: 'white',
+  },
+  tour_name: {
+    textAlign: 'center',
+    fontFamily: bold,
+    color: ogreen,
+    fontSize: 20,
+    marginBottom: 5,
   },
   header: {
     width: width,
@@ -175,7 +219,8 @@ const styles = StyleSheet.create({
   },
   descs: {
     marginTop: 10,
-    marginLeft: 40,
+    marginLeft: 20,
+    width: width - 150,
   },
   descContainer: {
     borderTopColor: '#E1E1E1',

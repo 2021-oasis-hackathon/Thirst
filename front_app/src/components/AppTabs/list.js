@@ -20,6 +20,8 @@ import Loading from './Loading';
 
 import axios from 'axios';
 
+import {url} from '../../url';
+
 import DropDownPicker from 'react-native-dropdown-picker';
 import {useSelector} from 'react-redux';
 
@@ -54,23 +56,28 @@ function List({navigation, route}) {
   const [value, setValue] = useState(null);
   const [list, setList] = useState(null);
   const [items, setItems] = useState([
-    {label: '농어촌 체험', value: '농어촌'},
-    {label: '자연생태 체험', value: '자연생태'},
-    {label: '승마체험', value: '승마'},
-    {label: '갯벌체험', value: '갯벌'},
-    {label: '수확체험', value: '수확'},
+    {label: '농사 체험', value: '농사'},
+    {label: '바다 체험', value: '바다'},
+    {label: '생태 체험', value: '생태'},
+    {label: '전통음식 체험', value: '전통음식'},
+    {label: '전통문화 체험', value: '전통문화'},
+    {label: '놀이 체험', value: '놀이'},
+    {label: '기타 체험', value: '기타'},
   ]);
+  const [cache, setCache] = useState({});
+  // label : {.... 형식}
 
   const getList = () => {
     let body = new FormData();
-    body.append('location', location);
+    body.append('Area', location);
     axios
-      .post(`${url}/Tour/`, body, {
+      .post(`${url}/Tour/search_Area/`, body, {
         headers: {
-          Authorization: user.token.access,
+          Authorization: `Bearer ${user.token.access}`,
         },
       })
       .then(res => {
+        //   console.log(res.data);
         if (res.data) setList(res.data);
       })
       .catch(err => {
@@ -79,28 +86,46 @@ function List({navigation, route}) {
   };
 
   const searchTheme = async v => {
-    let body = new FormData();
-    body.append('location', location);
-    body.append('theme', v);
+    let filtered = [];
+    if (!value.length) {
+      getList();
+      return;
+    }
 
-    setValue(v);
+    for (let i = 0; i < value.length; i++) {
+      if (cache[value[i]]) {
+        filtered = filtered.concat(cache[value[i]]);
+        continue;
+      }
+      let body = new FormData();
+      body.append('Area', location);
+      body.append('theme', value[i]);
 
-    await axios
-      .post(`${url}/Tour/`, body, {
-        headers: {
-          Authorization: `Bearer ${user.token.access}`,
-        },
-      })
-      .then(res => {
-        if (res.data) setList(res.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+      await axios
+        .post(`${url}/Tour/search_theme/`, body, {
+          headers: {
+            Authorization: `Bearer ${user.token.access}`,
+          },
+        })
+        .then(res => {
+          if (res.data) {
+            filtered = filtered.concat(res.data);
+            cache[value[i]] = res.data;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+
+    setList(filtered);
   };
 
-  useEffect(() => {}, []);
-  if (data)
+  useEffect(() => {
+    getList();
+  }, []);
+
+  if (list)
     return (
       <View style={styles.container}>
         <View style={[style.row, style.header]}>
@@ -151,6 +176,9 @@ function List({navigation, route}) {
             height: 40,
           }}
           listMode="MODAL"
+          modalProps={{
+            animationType: 'fade',
+          }}
           open={open}
           showBadgeDot={true}
           badgeStyle={{
@@ -171,16 +199,16 @@ function List({navigation, route}) {
           value={value}
           items={items}
           setOpen={setOpen}
-          setValue={v => {
-            console.log(v);
-            searchTheme(v);
+          setValue={setValue}
+          onChangeValue={() => {
+            searchTheme();
           }}
           setItems={setItems}
           dropDownContainerStyle={styles.dropDownContainerStyle}
           style={styles.dropdown}
         />
         <ScrollView contentContainerStyle={styles.tour}>
-          {data.map((i, index) => (
+          {list.map((i, index) => (
             <ListItem key={index} info={i} navigation={navigation} />
           ))}
         </ScrollView>

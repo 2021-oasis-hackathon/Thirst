@@ -112,8 +112,18 @@ const Register = ({navigation}) => {
       .then(res => {
         console.log(res.data);
         if (res.data) {
-          Alert.alert('어서오세요! 농촌체험 어플 촌스러운입니다.');
-          navigation.navigate('Login');
+          Alert.alert(
+            '회원가입 완료',
+            '어서오세요! 농촌체험 어플 촌스러운입니다.',
+            [
+              {
+                text: '확인',
+                onPress: () => {
+                  navigation.navigate('Login');
+                },
+              },
+            ],
+          );
         } else {
           Alert.alert('회원가입에 실패하였습니다. ㅠㅠ \n 다시 시도해주세요.');
         }

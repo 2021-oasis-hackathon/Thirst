@@ -15,45 +15,20 @@ import {lgreen} from '../../assets/color';
 import {bold, plane} from '../../assets/font';
 
 import style from '../../assets/style';
-import url from '../../url';
-
+import {url} from '../../url';
+import {times} from '../../timeTable';
+import Loading from './Loading';
 const {width, height} = Dimensions.get('window');
 
 const dayArray = ['일', '월', '화', '수', '목', '금', '토'];
-
-const testData = [
-  {
-    time: '09:00',
-    remain: 4,
-    total: 7,
-  },
-  {
-    time: '11:00',
-    remain: 7,
-    total: 7,
-  },
-  {
-    time: '13:00',
-    remain: 0,
-    total: 7,
-  },
-  {
-    time: '15:00',
-    remain: 4,
-    total: 7,
-  },
-  {
-    time: '17:00',
-    remain: 7,
-    total: 7,
-  },
-];
 
 function Scheduler({navigation, route}) {
   const user = useSelector(state => state.user);
   const [dateList, setDateList] = useState({});
   const [selectList, setSelectList] = useState({});
-  const [cache, setCache] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [init, setInit] = useState(false);
+  // const [cache, setCache] = useState({});
 
   const info = route.params.info;
   const scrollRef = useRef(null);
@@ -69,13 +44,15 @@ function Scheduler({navigation, route}) {
               navigation.navigate('Reservation', {
                 info: info,
                 time: i.time,
+                time_num: i.time_num,
                 date: day,
-                remain: info.tour_max_person_at_one - 0,
+                year: i.year,
+                reserved: i.reserved,
               });
             }}>
             <Text style={styles.itemTime}>{i.time}</Text>
             <Text style={styles.itemPerson}>
-              {i.remain}/{info.tour_max_person_at_one}
+              {i.reserved}/{info.tour_max_person_at_one}
             </Text>
           </TouchableOpacity>
         );
@@ -93,111 +70,99 @@ function Scheduler({navigation, route}) {
     setSelectList(sortedList);
   };
 
-  const getSchedule = async date => {
+  const getSchedule = async (year, date) => {
     let body = new FormData();
-    body.append('date', date);
+    setLoading(true);
+    body.append('reserv_time', `${year}-${date}`);
+    body.append('tour_name', info.tour_name);
+
     await axios
-      .post(`${url}/`, body, {
+      .post(`${url}/Reserv/reserv_oneday/`, body, {
         headers: {
           Authorization: `Bearer ${user.token.access}`,
         },
       })
       .then(res => {
         if (res.data) {
-        }
-      });
-  };
+          // let dates = {...dateList};
+          // dates[key] = {
+          //   date: key,
+          //   data: res.data,
+          //   checked: true,
+          //   day: dayArray[day],
+          // };
+          let new_select = selectList;
+          let data = res.data[0];
 
-  const getDates = async date => {
-    if (cache[data]) {
-      return;
-    }
-    let body = new FormData();
-    body.append('date', date);
+          new_select[date] = [];
+          for (let i = 0; i < times.length; i++) {
+            new_select[date].push({
+              year: year,
+              time: times[i],
+              time_num: i + 1,
+              reserved: data[`time_${i + 1}`],
+            });
+          }
 
-    await axios
-      .post(`${url}/`, body, {
-        headers: {
-          Authorization: `Bearer ${user.token.access}`,
-        },
-      })
-      .then(res => {
-        if (res.data) {
-          let dates = {...dateList};
-          dates[key] = {
-            date: key,
-            data: res.data,
-            checked: true,
-            day: dayArray[day],
-          };
-
-          setDateList({...dates});
+          sortItems({...new_select});
+          setLoading(false);
         }
       })
       .catch(err => {
         console.log(err);
+        setLoading(false);
       });
   };
 
   const initDates = async () => {
+    setInit(false);
     const today = new Date();
+    let year = today.getFullYear();
     let date = today.getDate();
     let month = today.getMonth() + 1;
     let day = today.getDay();
     let datas = {};
     let select = {};
 
-    for (let i = 0; i < 5; i++) {
-      let key = `${month}/${date}`;
-      let body = {};
-      body.append('date', key);
-      await axios
-        .post(`${url}/`, body, {
-          headers: {
-            Authorization: `Bearer ${user.token.access}`,
-          },
-        })
-        .then(res => {
-          if (res.data) {
-            dates[key] = {
-              date: key,
-              data: res.data,
-              checked: true,
-              day: dayArray[day],
-            };
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-
-      date = date + 1;
-      day = (day + 1) % 7;
-      if (date == 32) {
+    for (let i = 0; i < 14; i++) {
+      let key = `${String(month).padStart(2, '0')}-${String(date).padStart(
+        2,
+        '0',
+      )}`;
+      if (i < 4) getSchedule(today.getFullYear(), key, true);
+      datas[key] = {
+        year: year,
+        day: dayArray[day],
+        date: key,
+        checked: i < 4,
+      };
+      if (date == 31) {
         date = 1;
-        month = month + 1;
+        month = 31;
       }
-      select[key] = datas[key].data;
+      date += 1;
+      day = (day + 1) % 7;
     }
 
     setDateList(datas);
-    setSelectList(select);
+    // setSelectList(select);
+    setLoading(false);
   };
 
   useEffect(() => {
     initDates();
   }, []);
 
-  if (!dataList)
-    return (
-      <View>
-        <Text>Loading</Text>
-      </View>
-    );
+  useEffect(() => {
+    setInit(true);
+  }, [dateList]);
+
+  if (!dateList && !init) return <Loading />;
   else
     return (
       <View style={styles.container}>
         <View style={styles.dateFrame}>
+          {loading && <Loading />}
           <View style={styles.miniBar}>
             <Text style={styles.barText}>{'<'}</Text>
           </View>
@@ -205,7 +170,7 @@ function Scheduler({navigation, route}) {
             horizontal={true}
             showsHorizontalScrollIndicator={true}
             contentContainerStyle={[style.dateSection]}>
-            {Object.entries(dataList).map(([key, value]) => (
+            {Object.entries(dateList).map(([key, value]) => (
               <TouchableOpacity
                 key={key}
                 onPress={() => {
@@ -214,8 +179,9 @@ function Scheduler({navigation, route}) {
                   setDateList(dates);
 
                   let select = {...selectList};
-                  if (dates[key].checked) select[key] = dates[key].data;
-                  else delete select[key];
+                  if (dates[key].checked) {
+                    getSchedule(dates[key].year, key, false);
+                  } else delete select[key];
                   sortItems(select);
                 }}>
                 <View
@@ -255,16 +221,17 @@ function Scheduler({navigation, route}) {
             // console.log(itemScroll);
             scrollRef.current.scrollToEnd({animated: true});
           }}>
-          {Object.entries(selectList).map(([key, value]) => (
-            <View key={`item${key}`} style={[styles.day, style.row]}>
-              <View style={styles.dateView}>
-                <Text style={styles.date}>{key}</Text>
+          {!loading &&
+            Object.entries(selectList).map(([key, value]) => (
+              <View key={`item${key}`} style={[styles.day, style.row]}>
+                <View style={styles.dateView}>
+                  <Text style={styles.date}>{key}</Text>
+                </View>
+                <View style={[styles.items, style.row]}>
+                  {renderItem(value, key)}
+                </View>
               </View>
-              <View style={[styles.items, style.row]}>
-                {renderItem(value, key)}
-              </View>
-            </View>
-          ))}
+            ))}
         </ScrollView>
       </View>
     );
