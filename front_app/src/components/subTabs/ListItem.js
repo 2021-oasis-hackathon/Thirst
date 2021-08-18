@@ -11,6 +11,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {lgreen} from '../../assets/color';
 import {plane} from '../../assets/font';
 import style from '../../assets/style';
+import {media} from '../../url';
 
 const {width, height} = Dimensions.get('window');
 
@@ -20,15 +21,22 @@ function ListItem({navigation, info}) {
     <View style={styles.container}>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('Detail', {info});
+          navigation.navigate('Detail', {tour_name: info.tour_name});
         }}>
         <View style={style.row}>
-          <Image source={{uri: info.img}} style={styles.img} />
+          <Image
+            source={{uri: `${media}${info.tour_img}`}}
+            style={styles.img}
+          />
           <View style={[style.column, styles.info]}>
-            <Text style={styles.name}>{info.name}</Text>
-            <Text style={styles.writer}>운영자 {info.writer}</Text>
-            <Text style={styles.period}>운영 기간: {info.period}</Text>
-            <Text style={styles.location}>운영 장소: {info.location}</Text>
+            <Text style={styles.name}>{info.tour_name}</Text>
+            <Text style={styles.period}>
+              운영 기간{'\n'}- {info.start_time.split('T')[0]} -{' '}
+              {info.end_time.split('T')[0]}
+            </Text>
+            <Text style={styles.location}>
+              주소{'\n'}- {info.tour_addr}
+            </Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -52,6 +60,10 @@ const styles = StyleSheet.create({
   info: {
     top: 5,
     marginLeft: 20,
+    alignItems: 'flex-start',
+    width: width / 2,
+    display: 'flex',
+    flexWrap: 'wrap',
   },
   name: {fontSize: 14},
   writer: {
