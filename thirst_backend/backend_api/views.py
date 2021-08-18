@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.utils import translation
+from django.db.models import Sum
 # from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework.decorators import action, api_view
@@ -139,12 +140,17 @@ class ReservViewsets(viewsets.ModelViewSet):
         temp_tour_model=Tour.objects.get(tour_name=Tour_name)
         temp_tour_oneday_model=ReservOneday.objects.get(tour_name=Tour_name,reserv_time=Reserv_time)
         Time_detail_dynamic='time_'+str(Time_detail)
+        
+        temp_reservobj=Reserv.objects.filter(tour=Tour_name)
+        
+        total_reserv_person=temp_reservobj.aggregate(Sum('person)num'))
 
-        if temp_tour_model.tour_person_limit-int(Person_num)<0:
+
+        if temp_tour_model.tour_person_limit-(total_reserv_person+int(Person_num))<0:
             return Response('over reserv')
         else:
-            temp_tour_model.tour_person_limit-=int(Person_num)
-            temp_tour_model.save()
+            # temp_tour_model.tour_person_limit-=int(Person_num)
+            # temp_tour_model.save()
             setattr(
                 temp_tour_oneday_model,
                 Time_detail_dynamic,
@@ -181,9 +187,13 @@ class ReservViewsets(viewsets.ModelViewSet):
 
     @extend_schema(request=FindReservonedaySerializer,summary="reserv_one_day API")
     @action(methods=['POST'], detail=False)
-    def reserv_oneday(self,request):
-        tour_name=request.data.get('tour_name')
-        reserv_time=request.data.get('reserv_time')
+    def reserv_oneday(self,request,Tour_name=None,Reserv_time=None):
+        if Tour_name and Reserv_time:    
+            tour_name=Tour_name
+            reserv_time=Reserv_time
+        else:
+            tour_name=request.data.get('tour_name')
+            reserv_time=request.data.get('reserv_time')
         if tour_name and reserv_time:
             queryset=ReservOneday.objects.filter(tour_name=tour_name,reserv_time__contains=reserv_time)
             if queryset:
@@ -199,7 +209,7 @@ class ReservViewsets(viewsets.ModelViewSet):
                     reserv_time=reserv_time,
                     tour_limit_person=mpao,
                     )
-                self.reserv_oneday(request)
+                self.reserv_oneday(request,tour_name,reserv_time)
 
         return Response('wrong val')
 
