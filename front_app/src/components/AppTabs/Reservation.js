@@ -19,7 +19,7 @@ import Logo from '../subTabs/Logo';
 import {useDispatch, useSelector} from 'react-redux';
 
 import axios from 'axios';
-import url from '../../url';
+import {url} from '../../url';
 import Loading from './Loading';
 import {GetUser} from '../../redux/action';
 
@@ -35,31 +35,34 @@ function Reservation({navigation, route}) {
 
   const info = route.params.info;
 
-  const getUserInfo = () => {
-    axios
-      .get(`${url}/user/Customer/`, {
-        headers: {
-          Authorization: user.token.access,
-        },
-      })
-      .then(res => {
-        setUserData(res.data[0]);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
   useEffect(() => {
-    //  console.log(route.params.info);
+    console.log(route.params);
   }, []);
 
   const onSubmit = async () => {
+    if (route.params.tour_person_limit < route.params.reserved + num) {
+      Alert.alert(
+        `예약 가능한 잔여인원은 ${
+          route.params.tour_person_limit - route.params.reserved
+        }명 입니다!`,
+      );
+      return;
+    }
     let body = new FormData();
 
-    body.append('reserv_time', `${route.params.date} ${route.params.time}`);
-    body.append('person_num', num);
+    let date = route.params.date.split('-');
+    body.append(
+      'reserv_time',
+      `${route.params.year}-${String(date[0]).padStart(2, '0')}-${String(
+        date[1].padStart(2, '0'),
+      )} 00:00`,
+    );
+    body.append('person_num', Number(num));
     body.append('user', user.username);
     body.append('tour', info.tour_name);
+    body.append('reserv_time_detail', route.params.time_num);
+
+    console.log(body);
 
     await axios
       .post(`${url}/Reserv/`, body, {
@@ -69,16 +72,26 @@ function Reservation({navigation, route}) {
       })
       .then(res => {
         if (res.data) {
+          if (res.data === 'over reserv') {
+            Alert.alert('예약 가능 인원을 초과하였습니다.');
+            return;
+          }
           //dispatch(GetUser(res.data[0]));
-          Alert.alert('예약이 완료되었습니다.');
+          console.log(res.data);
+          Alert.alert('예약 완료!', '감사합니다.', [
+            {
+              text: '확인',
+              onPress: () => {
+                navigation.navigate('MyReservation', {redirect: true});
+              },
+            },
+          ]);
         }
       })
       .catch(err => {
         console.log(err);
         Alert.alert('예약에 실패하였습니다. 인원수를 확인해주세요.');
       });
-
-    navigation.navigate('MyReservation');
   };
 
   if (user.name)
@@ -120,7 +133,7 @@ function Reservation({navigation, route}) {
             </View>
             <View style={style.column}>
               <Text style={styles.text}> {info.tour_name}</Text>
-              <Text style={styles.text}> {route.params.date}</Text>
+              <Text style={styles.text}>{route.params.date}</Text>
               <Text style={styles.text}> {route.params.time}</Text>
 
               <View style={styles.nums}>
