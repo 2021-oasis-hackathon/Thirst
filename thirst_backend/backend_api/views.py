@@ -27,6 +27,7 @@ from backend_api.serializers import (
     ReservonedaySerializer,
     FindReservonedaySerializer,
     ReviewCreateSerializer,
+    ReviewTourSerializer
 )
 
 @extend_schema(tags=["api"], summary="관광지 API", description="관광지 API")
@@ -110,6 +111,16 @@ class ReviewViewsets(viewsets.ModelViewSet):
         return Response(ReviewCreateSerializer(temp).data)
 
     pass
+
+    @extend_schema(request=ReviewTourSerializer, summary="Find_tour_review API")
+    @action(methods=['POST'], detail=False)
+    def FindTourReview(self, request, *args, **kwgs):
+        tour = request.data.get('tour')
+        if tour:
+           res=Review.objects.filter(tour_name=tour)
+           serializer=ReviewSerializer(res, many=True)
+           return Response(serializer.data)
+        return Response('wrong val')
 
 @extend_schema(tags=["api"], summary="예약 API", description="예약 API")
 class ReservViewsets(viewsets.ModelViewSet):
