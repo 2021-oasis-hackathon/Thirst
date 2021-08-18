@@ -16,6 +16,18 @@ class ReviewSerializer(ModelSerializer):
         model=Review
         fields='__all__'
 
+class ReviewCreateSerializer(ModelSerializer):
+    class Meta:
+        model=Review
+        fields=(
+            'tour',
+            'review_title',
+            'comment',
+            'review_img',
+            'Satisfaction',
+        )
+
+
 class ReservSerializer(ModelSerializer):
     class Meta:
         model=Reserv

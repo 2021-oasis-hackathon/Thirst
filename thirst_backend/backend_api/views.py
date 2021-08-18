@@ -26,6 +26,7 @@ from backend_api.serializers import (
     FindMyReservSerializer,
     ReservonedaySerializer,
     FindReservonedaySerializer,
+    ReviewCreateSerializer,
 )
 
 @extend_schema(tags=["api"], summary="관광지 API", description="관광지 API")
@@ -85,6 +86,29 @@ class TourViewsets(viewsets.ModelViewSet):
 class ReviewViewsets(viewsets.ModelViewSet):
     queryset=Review.objects.all()
     serializer_class=ReviewSerializer
+
+    @extend_schema(request=ReviewCreateSerializer, summary="review_create API")
+    def create(self, request, *args, **kwargs):
+        # serializer = ReviewSerializer(data=request.data)
+
+        Review_title=request.data.get('review_title')
+        Comment=request.data.get('rcomment')
+        Review_img=request.data.get('review_img')
+        Satisfaction=request.data.get('Satisfaction')
+        Tour_name=request.data.get('tour')
+        temp_tour=Tour.objects.get(tour_name=Tour_name)
+        print(request.user)
+        temp=Review.objects.create(
+            user=request.user,
+            tour=temp_tour,
+            review_title=Review_title,
+            comment=Comment,
+            review_img=Review_img,
+            Satisfaction=Satisfaction,
+        )
+
+        return Response(ReviewCreateSerializer(temp).data)
+
     pass
 
 @extend_schema(tags=["api"], summary="예약 API", description="예약 API")
