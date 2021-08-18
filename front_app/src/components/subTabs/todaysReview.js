@@ -12,7 +12,9 @@ import {plane} from '../../assets/font';
 import {url} from '../../url';
 import axios from 'axios';
 import {useSelector} from 'react-redux';
-import {isTemplateElement} from '@babel/types';
+
+import Loading from '../AppTabs/Loading';
+
 const {width, height} = Dimensions.get('window');
 
 function TodaysReview({navigation}) {
@@ -73,7 +75,7 @@ function TodaysReview({navigation}) {
         </View>
       </TouchableOpacity>
     );
-  else return <></>;
+  else return <Loading />;
 }
 
 export default TodaysReview;

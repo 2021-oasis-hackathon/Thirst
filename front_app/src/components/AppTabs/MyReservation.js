@@ -10,13 +10,11 @@ import {
 } from 'react-native';
 import style from '../../assets/style';
 import {LocaleConfig} from 'react-native-calendars';
-import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
+import {Calendar} from 'react-native-calendars';
 import axios from 'axios';
 import {lgreen} from '../../assets/color';
 import {bold} from '../../assets/font';
 import {useSelector} from 'react-redux';
-
-import getDate from '../../getDate';
 
 import Loading from '../AppTabs/Loading';
 
@@ -109,12 +107,14 @@ const MyReservation = ({navigation, route}) => {
         today += '-';
         today += String(date.getDate()).padStart(2, '0');
 
-        console.log(today);
+        //  console.log(today);
         marked[today] = {selected: true, selectedColor: '#94AF23'};
         for (let i = 0; i < res.data.length; i++) {
           let data = res.data[i];
+          let key = data.Reserv_time.split(' ')[0];
+          if (key === today) continue;
           // console.log(data.Reserv_time);
-          marked[data.Reserv_time.split(' ')[0]] = {
+          marked[key] = {
             marked: true,
             dotColor: '#3D550C',
           };
@@ -136,7 +136,7 @@ const MyReservation = ({navigation, route}) => {
     getList();
   }, []);
 
-  if (reservList)
+  if (reservList && markedList)
     return (
       <View style={styles.container}>
         <View style={styles.my_res}>

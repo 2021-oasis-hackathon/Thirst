@@ -68,14 +68,13 @@ function Scheduler({navigation, route}) {
     let sortedList = {};
     for (let i = 0; i < keys.length; i++) sortedList[keys[i]] = select[keys[i]];
 
-    setSelectList({...sortedList});
-
-    setLoading(false);
+    setSelectList(sortedList);
   };
 
   const getSchedule = async (year, date) => {
-    let body = new FormData();
     setLoading(true);
+    let body = new FormData();
+
     body.append('reserv_time', `${year}-${date}`);
     body.append('tour_name', info.tour_name);
 
@@ -153,6 +152,7 @@ function Scheduler({navigation, route}) {
   }, []);
 
   useEffect(() => {
+    console.log(Object.keys(selectList).length);
     if (!init && Object.keys(selectList).length === 4) {
       setInit(true);
     }

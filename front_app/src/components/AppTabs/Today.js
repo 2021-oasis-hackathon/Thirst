@@ -30,6 +30,7 @@ function Today({navigation, route}) {
         },
       })
       .then(res => {
+        console.log(res.data);
         setList(res.data);
       })
       .catch(err => {

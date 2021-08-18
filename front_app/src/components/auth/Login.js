@@ -75,9 +75,15 @@ const Login = ({navigation}) => {
           if (res.data) {
             //asyncstorage에 아이디 저장
             console.log(res.data);
-            Alert.alert('환영합니다!', '로그인에 성공하였습니다.');
-            dispatch(UserLogin(res.data));
-            getUserInfo(res.data);
+            Alert.alert('환영합니다!', '로그인에 성공하였습니다.', [
+              {
+                text: '확인',
+                onPress: () => {
+                  dispatch(UserLogin(res.data));
+                  getUserInfo(res.data);
+                },
+              },
+            ]);
           } else {
             Alert.alert(
               '아이디 혹은 비밀번호가 잘못되었습니다. 다시 시도해주세요.',
