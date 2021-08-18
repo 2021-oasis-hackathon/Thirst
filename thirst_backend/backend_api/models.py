@@ -7,6 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from rest_framework.exceptions import ValidationError
+from django.core.validators import RegexValidator
 
 def satisfaction_val(val):
     if val:
@@ -40,7 +41,7 @@ class Tour(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     tour_addr = models.CharField(max_length=100)
-    tour_phone_num = models.CharField(max_length=100, blank=True, null=True)
+    tour_phone_num = models.CharField(max_length=12,validators=[RegexValidator(r'^\d{1,10}$')])
     tour_time_at_one = models.PositiveIntegerField()
     tour_person_limit = models.PositiveIntegerField(blank=True, null=True)
     tour_min_person_at_one = models.PositiveIntegerField()
@@ -93,7 +94,7 @@ class Review(models.Model):
     review_title = models.CharField(max_length=50,null=False)
     comment = models.CharField(max_length=300, blank=True, null=True)
     time = models.DateTimeField()
-    review_img = models.ImageField(default='media/default_tour.jpg')
+    review_img = models.ImageField(default='media/default_tour.jpg',null=False)
     Satisfaction = models.PositiveIntegerField()
 
 class ReservOneday(models.Model):

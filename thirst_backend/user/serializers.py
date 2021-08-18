@@ -14,18 +14,21 @@ class OwnerCreateSerializer(ModelSerializer):
         model=Owner
         fields=(
             'username',
-            'phone',
-            'name',
             'password',
+            'name',
+            'phone',
+            'profile_img',
         )
 
     def create(self,validation_data):
 
         return Owner.objects.create(
             username=validation_data.get('username'),
-            phone=validation_data.get('phone'),
-            name=validation_data.get('name'),
             password=make_password(validation_data.get('password')),
+            name=validation_data.get('name'),
+            phone=validation_data.get('phone'),
+            profile_img=validation_data.get('profile_img'),
+            
         )
 
 class CustomerCreateSerializer(ModelSerializer):
@@ -33,19 +36,29 @@ class CustomerCreateSerializer(ModelSerializer):
         model=Customer
         fields=(
             'username',
-            'phone',
-            'name',
             'password',
+            'name',
+            'phone',
+            'profile_img',
         )
 
     def create(self,validation_data):
-        
-        return Customer.objects.create(
-            username=validation_data.get('username'),
-            phone=validation_data.get('phone'),
-            name=validation_data.get('name'),
-            password=make_password(validation_data.get('password'))
-        )
+        temp_img=validation_data.get('profile_img')
+        if temp_img:
+            return Customer.objects.create(
+                username=validation_data.get('username'),
+                password=make_password(validation_data.get('password')),
+                name=validation_data.get('name'),
+                phone=validation_data.get('phone'),
+                profile_img=temp_img,
+            )
+        else:
+            return Customer.objects.create(
+                username=validation_data.get('username'),
+                password=make_password(validation_data.get('password')),
+                name=validation_data.get('name'),
+                phone=validation_data.get('phone'),
+            )
 
 
 class OwnerSerializer(ModelSerializer):
@@ -73,5 +86,6 @@ class UserinfoSerializer(ModelSerializer):
             'username',
             'name',
             'phone',
-            'credit'
+            'credit',
+            'profile_img',
         )
