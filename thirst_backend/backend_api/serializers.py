@@ -59,6 +59,8 @@ class TourlistdetailSerializer(ModelSerializer):
             'tour_phone_num',
             'tour_person_limit',
             'tour_max_person_at_one',
+            'tour_time_at_one',
+            'tour_price'
 
         )
         lookup_field = "tour_name"
@@ -102,3 +104,6 @@ class ReservonedaySerializer(ModelSerializer):
 class FindReservonedaySerializer(serializers.Serializer):
     tour_name=serializers.CharField()
     reserv_time=serializers.DateTimeField()
+
+class ReviewTourSerializer(serializers.Serializer):
+    tour=serializers.IntegerField()
