@@ -116,7 +116,7 @@ class ReviewViewsets(viewsets.ModelViewSet):
     def FindTourReview(self, request, *args, **kwgs):
         tour = request.data.get('tour')
         if tour:
-           res=Review.objects.filter(tour_id=tour)
+           res=Review.objects.filter(tour_name=tour)
            serializer=ReviewSerializer(res, many=True)
            return Response(serializer.data)
         return Response('wrong val')
