@@ -31,8 +31,8 @@ function ListItem({navigation, info}) {
           <View style={[style.column, styles.info]}>
             <Text style={styles.name}>{info.tour_name}</Text>
             <Text style={styles.period}>
-              운영 기간{'\n'}- {info.start_time.split('T')[0]} -{' '}
-              {info.end_time.split('T')[0]}
+              운영 기간{'\n'}- {info.start_time.split(' ')[0]} -{' '}
+              {info.end_time.split(' ')[0]}
             </Text>
             <Text style={styles.location}>
               주소{'\n'}- {info.tour_addr}

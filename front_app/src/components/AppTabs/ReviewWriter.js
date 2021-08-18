@@ -38,7 +38,7 @@ function ReviewWriter({navigation, route}) {
   const tour = route.params.tour;
   useEffect(() => {}, []);
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     let body = new FormData();
 
     body.append('tour', route.params.tour);
@@ -53,9 +53,7 @@ function ReviewWriter({navigation, route}) {
         name: photo.fileName,
       });
 
-    console.log(body);
-
-    axios
+    await axios
       .post(`${url}/Review/`, body, {
         headers: {
           Authorization: `Bearer ${user.token.access}`,
