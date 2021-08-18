@@ -41,7 +41,7 @@ class Tour(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     tour_addr = models.CharField(max_length=100)
-    tour_phone_num = models.CharField(max_length=12,validators=[RegexValidator(r'^\d{1,10}$')],default='00000000000')
+    tour_phone_num = models.CharField(max_length=13,validators=[RegexValidator(r'^\d{1,10}$')],default='00000000000')
     tour_time_at_one = models.PositiveIntegerField()
     tour_person_limit = models.PositiveIntegerField(blank=True, null=True)
     tour_min_person_at_one = models.PositiveIntegerField()

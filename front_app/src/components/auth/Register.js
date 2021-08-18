@@ -16,6 +16,8 @@ import {lgreen} from '../../assets/color';
 import {bold, plane} from '../../assets/font';
 import axios from 'axios';
 
+import {url} from '../../url';
+
 const {width, height} = Dimensions.get('window');
 
 const Register = ({navigation}) => {
@@ -40,9 +42,8 @@ const Register = ({navigation}) => {
     } else {
       let body = new FormData();
 
-      body.append('username', id);
+      body.append('username', id.toLowerCase());
 
-      console.log(body);
       await axios
         .post(`${url}/user/User/double_check/`, body)
         .then(res => {
@@ -102,11 +103,12 @@ const Register = ({navigation}) => {
     if (!oncheck()) return;
 
     let body = new FormData();
-    body.append('username', id.toLocaleLowerCase());
+    body.append('username', id.toLowerCase());
     body.append('password', passwd);
     body.append('name', name);
-    body.append('phone', phone);
+    body.append('phone', String(phone));
 
+    console.log(`${url}/user/Customer/`);
     await axios
       .post(`${url}/user/Customer/`, body)
       .then(res => {
@@ -163,7 +165,7 @@ const Register = ({navigation}) => {
 
           <TextInput
             style={styles.input}
-            placeholder="휴대폰 번호(010-0000-0000)"
+            placeholder="휴대폰 번호(01000000000)"
             onChangeText={n => setPhone(n)}
           />
 

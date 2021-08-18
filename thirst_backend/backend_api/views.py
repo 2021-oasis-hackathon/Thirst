@@ -111,6 +111,16 @@ class ReviewViewsets(viewsets.ModelViewSet):
 
     pass
 
+    @extend_schema(request=ReviewTourSerializer, summary="Find_tour_review API")
+    @action(methods=['POST'], detail=False)
+    def FindTourReview(self, request, *args, **kwgs):
+        tour = request.data.get('tour')
+        if tour:
+           res=Review.objects.filter(tour_id=tour)
+           serializer=ReviewSerializer(res, many=True)
+           return Response(serializer.data)
+        return Response('wrong val')
+
 @extend_schema(tags=["api"], summary="예약 API", description="예약 API")
 class ReservViewsets(viewsets.ModelViewSet):
     queryset=Reserv.objects.all()

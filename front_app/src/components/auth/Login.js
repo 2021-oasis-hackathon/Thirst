@@ -18,7 +18,7 @@ import {GetUser, UserLogin} from '../../redux/action/index';
 import {ScrollView} from 'react-native-gesture-handler';
 import {lgreen} from '../../assets/color';
 
-import url from '../../url';
+import {url} from '../../url';
 import axios from 'axios';
 
 import {useDispatch, useSelector} from 'react-redux';
@@ -39,7 +39,6 @@ const Login = ({navigation}) => {
   useEffect(() => {}, []);
 
   const getUserInfo = async token => {
-    console.log(user);
     await axios
       .get(`${url}/user/User/auth_user/`, {
         headers: {
@@ -49,7 +48,7 @@ const Login = ({navigation}) => {
       .then(res => {
         if (res.data) {
           let data = res.data;
-          console.log(res.data);
+
           dispatch(GetUser(data));
         }
       })
