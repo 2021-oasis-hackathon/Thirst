@@ -93,7 +93,7 @@ class ReviewViewsets(viewsets.ModelViewSet):
         # serializer = ReviewSerializer(data=request.data)
 
         Review_title=request.data.get('review_title')
-        Comment=request.data.get('rcomment')
+        Comment=request.data.get('comment')
         Review_img=request.data.get('review_img')
         Satisfaction=request.data.get('Satisfaction')
         Tour_name=request.data.get('tour')
