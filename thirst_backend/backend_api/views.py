@@ -27,6 +27,7 @@ from backend_api.serializers import (
     ReservonedaySerializer,
     FindReservonedaySerializer,
     ReviewCreateSerializer,
+    ReviewTourSerializer
 )
 
 @extend_schema(tags=["api"], summary="관광지 API", description="관광지 API")
