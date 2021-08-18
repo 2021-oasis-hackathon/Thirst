@@ -1,4 +1,5 @@
-import React from 'react';
+import axios from 'axios';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -7,61 +8,82 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {lgreen} from '../../assets/color';
 import {bold} from '../../assets/font';
 import style from '../../assets/style';
+import {UserLogout} from '../../redux/action';
+import url from '../../url';
+import Loading from './Loading';
 
 const {width, height} = Dimensions.get('window');
 
 function Profile(props) {
   const user = useSelector(state => state.user);
+  const dispatch = useDispatch();
+  const Logout = () => {
+    dispatch(UserLogout());
+  };
 
-  return (
-    <View style={styles.container}>
-      <View style={[styles.profile, styles.border]}>
-        <View style={styles.img}></View>
-        <View style={styles.row}>
-          <View style={styles.section}>
-            <Text style={styles.text}>사용자</Text>
-            <Text style={styles.text}>핸드폰</Text>
-            <Text style={styles.text}>잔고</Text>
-          </View>
-          <View style={styles.section}>
-            <Text style={styles.text}>{user.name}</Text>
-            <Text style={styles.text}>{user.phone}</Text>
-            <View style={styles.row}>
-              <Text style={styles.text}>{user.credit}</Text>
-              <TouchableOpacity style={styles.chargeButton}>
-                <Text style={styles.chargeText}>충전</Text>
-              </TouchableOpacity>
+  useEffect(() => {}, []);
+
+  if (user.username)
+    return (
+      <View style={styles.container}>
+        <View style={[styles.profile, styles.border]}>
+          <View style={styles.img}></View>
+          <View style={styles.row}>
+            <View style={styles.section}>
+              <Text style={styles.text}>사용자</Text>
+              <Text style={styles.text}>핸드폰</Text>
+              <Text style={styles.text}>잔고</Text>
+            </View>
+            <View style={styles.section}>
+              <Text style={styles.text}>{user.name}</Text>
+              <Text style={styles.text}>{user.phone}</Text>
+              <View style={styles.row}>
+                <Text style={styles.text}>{user.credit}</Text>
+                <TouchableOpacity style={styles.chargeButton}>
+                  <Text style={styles.chargeText}>충전</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
-      </View>
-      <View style={[styles.profile, styles.border, {alignItems: 'flex-start'}]}>
-        <View style={[style.row, styles.coupon]}>
-          <Image style={style.icon} source={require('../../assets/bori.png')} />
-          <Text style={styles.couponText}>내 쿠폰</Text>
+        <View
+          style={[styles.profile, styles.border, {alignItems: 'flex-start'}]}>
+          <View style={[style.row, styles.coupon]}>
+            <Image
+              style={style.icon}
+              source={require('../../assets/bori.png')}
+            />
+            <Text style={styles.couponText}>내 쿠폰</Text>
+          </View>
+          <View style={[styles.section, styles.coupons]}>
+            <Image
+              resizeMode="stretch"
+              source={require('../../assets/coupon.png')}
+              style={styles.couponImg}
+            />
+            <Image
+              resizeMode="stretch"
+              source={require('../../assets/coupon.png')}
+              style={styles.couponImg}
+            />
+          </View>
         </View>
-        <View style={[styles.section, styles.coupons]}>
-          <Image
-            resizeMode="stretch"
-            source={require('../../assets/coupon.png')}
-            style={styles.couponImg}
-          />
-          <Image
-            resizeMode="stretch"
-            source={require('../../assets/coupon.png')}
-            style={styles.couponImg}
-          />
-        </View>
+        <TouchableOpacity
+          style={styles.logout}
+          onPress={() => {
+            Logout();
+          }}>
+          <Text style={styles.logoutText}> 로그아웃</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.logout}>
-        <Text style={styles.logoutText}> 로그아웃</Text>
-      </TouchableOpacity>
-    </View>
-  );
+    );
+  else {
+    return <Loading />;
+  }
 }
 
 export default Profile;

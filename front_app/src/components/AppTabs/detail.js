@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -14,90 +14,104 @@ import {bold} from '../../assets/font';
 import Review from '../subTabs/Review';
 
 import style from '../../assets/style';
+import Loading from './Loading';
+import axios from 'axios';
+import {useSelector} from 'react-redux';
+import url from '../../url';
 
 const {width, height} = Dimensions.get('window');
 
 const test = [0, 0, 0, 0, 0, 0];
 
 function Detail({navigation, route}) {
+  const info = route.params.info;
+  const user = useSelector(state => state.user);
+  const [reviews, setReviews] = useState([]);
+
+  const getReviews = () => {
+    //axios.get(`http://${url}/`
+    //)
+  };
   useEffect(() => {
-    console.log(navigation);
+    // console.log(route.params.info);
   }, []);
-
-  return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.ScrollView}>
-        <View style={[styles.row, styles.header]}>
-          <Image
-            source={require('../../assets/bori.png')}
-            style={[style.icon, {marginLeft: 15}]}
-          />
-          <Text style={styles.title}> 농가 체험장 </Text>
-        </View>
-        <View style={styles.tour}>
-          <View style={[styles.column, {marginBottom: 5}]}>
-            <View style={[styles.row, {alignItems: 'center'}]}>
-              <TouchableOpacity style={styles.photoChanger}>
-                <Text style={styles.photoText}> {'<'} </Text>
-              </TouchableOpacity>
-              <Image
-                style={styles.img}
-                source={{uri: 'https://picsum.photos/700'}}
-              />
-              <TouchableOpacity style={styles.photoChanger}>
-                <Text style={styles.photoText}> {'>'} </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={[styles.row, styles.descs]}>
-              <View style={styles.column}>
-                <Text style={styles.desc}> 운영 기간 </Text>
-                <Text style={styles.desc}> 운영 장소</Text>
-                <Text style={styles.desc}> 연락처 </Text>
-              </View>
-              <View style={styles.column}>
-                <Text style={styles.desc}> {route.params.info.period} </Text>
-                <Text style={styles.desc}> {route.params.info.location} </Text>
-                <Text style={styles.desc}> 010-0000-0000</Text>
-              </View>
-            </View>
-          </View>
-          <View style={styles.descContainer}>
-            <Text style={styles.description}>
-              맑고 푸른 하늘과 빗나는 햇살이 가득한 농가 체험장 농가 마을
-              입니다. 농가를 자랑할만한 다른 멋진 설명을 추가해주세요. 저희 농가
-              마을에 오셔서 다양한 체험을 즐겨보세요.
-            </Text>
-          </View>
-        </View>
-
-        <View>
-          <TouchableOpacity style={styles.button} onPress={() => {}}>
-            <Text style={styles.buttonText}>쿠폰 발급받기</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              navigation.navigate('Scheduler');
-            }}>
-            <Text style={styles.buttonText}>예약하기</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.review}>
-          {test.map((i, num) => (
-            <Review
-              name="허수아비"
-              comments="재밌어요! 다음에도 친구들이랑 체험하러 가보고 싶어요"
-              date="2020-00-00"
-              satisfaction={5}
-              key={num}
-              img="https://picsum.photos/700"
+  if (reviews)
+    return (
+      <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.ScrollView}>
+          <View style={[styles.row, styles.header]}>
+            <Image
+              source={require('../../assets/bori.png')}
+              style={[style.icon, {marginLeft: 15}]}
             />
-          ))}
-        </View>
-      </ScrollView>
-    </View>
-  );
+            <Text style={styles.title}> 농가 체험장 </Text>
+          </View>
+          <View style={styles.tour}>
+            <View style={[styles.column, {marginBottom: 5}]}>
+              <View style={[styles.row, {alignItems: 'center'}]}>
+                <TouchableOpacity style={styles.photoChanger}>
+                  <Text style={styles.photoText}> {'<'} </Text>
+                </TouchableOpacity>
+                <Image style={styles.img} source={{uri: info.tour_img}} />
+                <TouchableOpacity style={styles.photoChanger}>
+                  <Text style={styles.photoText}> {'>'} </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={[styles.row, styles.descs]}>
+                <View style={styles.column}>
+                  <Text style={styles.desc}> 운영 기간 </Text>
+                  <Text style={styles.desc}> 운영 장소</Text>
+                  <Text style={styles.desc}> 소요 시간 </Text>
+                  <Text style={styles.desc}> 비용 </Text>
+                  <Text style={styles.desc}> 연락처 </Text>
+                </View>
+                <View style={styles.column}>
+                  <Text style={styles.desc}>
+                    {info.start_time.split('T')[0]}~
+                    {info.end_time.split('T')[0]}
+                  </Text>
+
+                  <Text style={styles.desc}>{info.tour_addr}</Text>
+                  <Text style={styles.desc}>{info.tour_time_at_one} 시간</Text>
+                  <Text style={styles.desc}>{info.tour_price}</Text>
+                  <Text style={styles.desc}>{info.tour_phone_num}</Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.descContainer}>
+              <Text style={styles.description}>{info.tour_desc}</Text>
+            </View>
+          </View>
+
+          <View>
+            <TouchableOpacity style={styles.button} onPress={() => {}}>
+              <Text style={styles.buttonText}>쿠폰 발급받기</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                navigation.navigate('Scheduler', {info});
+              }}>
+              <Text style={styles.buttonText}>예약하기</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.review}>
+            {test.map((i, num) => (
+              <Review
+                name="허수아비"
+                comments="재밌어요! 다음에도 친구들이랑 체험하러 가보고 싶어요"
+                date="2020-00-00"
+                satisfaction={5}
+                key={num}
+                img="https://picsum.photos/700"
+              />
+            ))}
+          </View>
+        </ScrollView>
+      </View>
+    );
+  else return <Loading />;
 }
 
 export default Detail;

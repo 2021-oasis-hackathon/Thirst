@@ -7,6 +7,7 @@ import {
   Dimensions,
   TextInput,
   Image,
+  Alert,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {lgreen} from '../../assets/color';
@@ -14,6 +15,8 @@ import {bold} from '../../assets/font';
 import style from '../../assets/style';
 
 import {launchImageLibrary} from 'react-native-image-picker';
+import axios from 'axios';
+import getDate from '../../getDate';
 
 const {width, height} = Dimensions.get('window');
 
@@ -29,17 +32,34 @@ function ReviewWriter({navigation, route}) {
 
   const [heart, setHeart] = useState(0);
 
+  const info = route.params.info;
   useEffect(() => {
     // console.log(route.params);
   }, []);
 
   const onSubmit = () => {
-    let body = {
-      tour_id: route.params.id,
-      //  title : title,
-      comment: comment,
-      date: new Date().toISOString().split('T')[0],
-    };
+    let body = new FormData();
+    body.append('user', user.username);
+    body.append('tour', info.tour_id);
+    body.append('comment', comment);
+    body.append('review_title', title);
+    body.append('Satisfaction', heart);
+
+    if (uri) body.append('review_img', uri);
+    body.append('time', getDate());
+
+    axios
+      .post(`${url}/api/Review`, body, {
+        headers: {
+          Authorization: user.token.access,
+        },
+      })
+      .then(res => {
+        Alert.alert('후기 등록 완료!');
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   const pickImage = () => {

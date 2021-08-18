@@ -45,6 +45,9 @@ class TourlistdetailSerializer(ModelSerializer):
             'end_time',
             'tour_addr', 
             'tour_phone_num',
+            'tour_person_limit',
+            'tour_max_person_at_one',
+
         )
         lookup_field = "tour_name"
 

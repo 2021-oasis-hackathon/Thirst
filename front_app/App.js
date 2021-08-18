@@ -17,6 +17,7 @@ import Scheduler from './src/components/AppTabs/Scheduler';
 import Reservation from './src/components/AppTabs/Reservation';
 import BottomBar from './src/navigator/bottom';
 import List from './src/components/AppTabs/list';
+import ReviewWriter from './src/components/AppTabs/ReviewWriter';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -26,7 +27,7 @@ export default function App() {
 
   useEffect(() => {}, []);
 
-  if (user.name)
+  if (user.token)
     return (
       <NavigationContainer>
         <Stack.Navigator
@@ -47,6 +48,7 @@ export default function App() {
             }}
             component={List}
           />
+          <Stack.Screen name="ReviewWriter" component={ReviewWriter} />
         </Stack.Navigator>
       </NavigationContainer>
     );

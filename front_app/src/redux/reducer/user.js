@@ -7,6 +7,7 @@ const initialState = {
   username: null,
   name: null,
   phone: null,
+  credit: null,
 };
 
 const user = (state = initialState, action) => {
@@ -16,16 +17,18 @@ const user = (state = initialState, action) => {
       ...state,
       token: action.token,
     };
-  } else if (action.type == USER_LOGOUT)
+  } else if (action.type == USER_LOGOUT) {
+    console.log(initialState);
     return {
-      state: initialState,
+      state: {...initialState},
     };
-  else if (action.type == GET_USER)
+  } else if (action.type == GET_USER)
     return {
       ...state,
       name: action.name,
       phone: action.phone,
       username: action.username,
+      credit: action.credit,
     };
   else return state;
 };
