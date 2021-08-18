@@ -40,7 +40,7 @@ class User(AbstractUser):
         # default=Types.CUSTOMER
     )
     name = models.CharField(max_length=100,unique=True)
-    phone = models.CharField(max_length=13,validators=[RegexValidator(regex = r'[^0-9]*$')])
+    phone = models.CharField(max_length=11,validators=[RegexValidator(r'^[0-9]*$')],default='00000000000')
     credit = models.PositiveIntegerField(default=0)
     profile_img=models.ImageField(default='user_profile/user_default.jpg',upload_to=user_image_path)
 
