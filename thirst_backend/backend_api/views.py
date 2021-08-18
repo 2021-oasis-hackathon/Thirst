@@ -143,10 +143,9 @@ class ReservViewsets(viewsets.ModelViewSet):
         
         temp_reservobj=Reserv.objects.filter(tour=Tour_name)
         
-        total_reserv_person=temp_reservobj.aggregate(Sum('person)num'))
-
-
-        if temp_tour_model.tour_person_limit-(total_reserv_person+int(Person_num))<0:
+        total_reserv_person=temp_reservobj.aggregate(Sum('person_num'))
+    
+        if temp_tour_model.tour_person_limit-(total_reserv_person['person_num__sum']+int(Person_num))<0:
             return Response('over reserv')
         else:
             # temp_tour_model.tour_person_limit-=int(Person_num)

@@ -7,7 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
-from django.core.validators import RegexValidator
+from django.core.validators import MinValueValidator, RegexValidator
 from thirst_backend.func import (
     satisfaction_val,
     tour_image_path,
@@ -75,7 +75,7 @@ class Reserv(models.Model):
         time_4=4
         time_5=5
     reserv_time_detail=models.IntegerField(choices=time_detail.choices,null=True)
-    person_num = models.PositiveIntegerField()
+    person_num = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     
 
 

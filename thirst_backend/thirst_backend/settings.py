@@ -150,7 +150,10 @@ REST_FRAMEWORK={
     ), 
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.MultiPartParser',
-    )  
+    ),  
+    'DATETIME_FORMAT': '%Y-%m-%d %H:%M',
+    'DATETIME_INPUT_FORMAT': '%Y-%m-%d %H:%M',
+
 }
 
 SPECTACULAR_SETTINGS = {
