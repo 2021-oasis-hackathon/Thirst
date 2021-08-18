@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.utils import translation
-import datetime
 # from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework.decorators import action, api_view
@@ -13,6 +12,7 @@ from backend_api.models import (
     Tour,
     Review,
     Reserv,
+    ReservOneday,
 )
 from backend_api.serializers import (
     TourSerializer,
@@ -24,6 +24,8 @@ from backend_api.serializers import (
     SearchThemeSerializer,
     SearchAreaSerializer,
     FindMyReservSerializer,
+    ReservonedaySerializer,
+    FindReservonedaySerializer,
 )
 
 @extend_schema(tags=["api"], summary="관광지 API", description="관광지 API")
@@ -96,14 +98,24 @@ class ReservViewsets(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
        
         Tour_name=request.data['tour'] #post 는 request에서 data 가져옴
-        person_num=request.data['person_num']
+        Person_num=request.data['person_num']
+        Reserv_time=request.data['reserv_time']
+        Time_detail=request.data['reserv_time_detail']
         temp_tour_model=Tour.objects.get(tour_name=Tour_name)
-        
-        if temp_tour_model.tour_person_limit-int(person_num)<0:
+        temp_tour_oneday_model=ReservOneday.objects.get(tour_name=Tour_name,reserv_time=Reserv_time)
+        Time_detail_dynamic='time_'+str(Time_detail)
+
+        if temp_tour_model.tour_person_limit-int(Person_num)<0:
             return Response('over reserv')
         else:
-            temp_tour_model.tour_person_limit-=int(person_num)
+            temp_tour_model.tour_person_limit-=int(Person_num)
             temp_tour_model.save()
+            setattr(
+                temp_tour_oneday_model,
+                Time_detail_dynamic,
+                getattr(temp_tour_oneday_model,Time_detail_dynamic)+int(Person_num)
+            )
+            temp_tour_oneday_model.save()
 
         self.perform_create(serializer)
         return Response(serializer.data)
@@ -126,4 +138,31 @@ class ReservViewsets(viewsets.ModelViewSet):
             ret.append(tempdict)
         return Response(ret)
 
-  
+    @extend_schema(request=FindReservonedaySerializer,summary="reserv_one_day API")
+    @action(methods=['POST'], detail=False)
+    def reserv_oneday(self,request):
+        tour_name=request.data.get('tour_name')
+        reserv_time=request.data.get('reserv_time')
+        if tour_name and reserv_time:
+            queryset=ReservOneday.objects.filter(tour_name=tour_name,reserv_time=reserv_time)
+            if queryset:
+                reserv_detailser=ReservonedaySerializer(queryset,many=True)
+                return Response(reserv_detailser.data)
+            else:
+                tourobj=Tour.objects.get(tour_name=tour_name)
+                mpao=tourobj.tour_max_person_at_one
+                # print(mpao)
+                # print(reserv_time)
+                ReservOneday.objects.create(
+                    tour_name=tourobj,
+                    reserv_time=reserv_time,
+                    tour_limit_person=mpao,
+                    )
+                self.reserv_oneday(request)
+
+        return Response('wrong val')
+
+# @extend_schema(tags=["api"], summary="예약_기본단위 API", description="예약 API")
+# class ReservOnedayViewsets(viewsets.ModelViewSet):
+#     queryset=ReservOneday.objects.all()
+#     serializer_class=ReservonedaySerializer

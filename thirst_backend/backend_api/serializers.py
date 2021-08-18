@@ -1,8 +1,9 @@
+from django.db import models
 from rest_framework import fields, serializers
 from rest_framework.serializers import ModelSerializer
 from rest_framework.utils import field_mapping
 
-from backend_api.models import Tour,Review,Reserv
+from backend_api.models import Tour,Review,Reserv,ReservOneday
 
 
 class TourSerializer(ModelSerializer):
@@ -18,12 +19,7 @@ class ReviewSerializer(ModelSerializer):
 class ReservSerializer(ModelSerializer):
     class Meta:
         model=Reserv
-        fields=(
-            'reserv_time',
-            'person_num',
-            'user',
-            'tour',
-        )
+        fields='__all__'
 
 class TourlistSerializer(ModelSerializer):
     class Meta:
@@ -81,3 +77,13 @@ class SearchAreaSerializer(serializers.Serializer):
 
 class FindMyReservSerializer(serializers.Serializer):
     myname=serializers.CharField()
+
+
+class ReservonedaySerializer(ModelSerializer):
+    class Meta:
+        model=ReservOneday
+        fields='__all__'
+
+class FindReservonedaySerializer(serializers.Serializer):
+    tour_name=serializers.CharField()
+    reserv_time=serializers.DateTimeField()

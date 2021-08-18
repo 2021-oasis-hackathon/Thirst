@@ -66,6 +66,13 @@ class Reserv(models.Model):
         )
     
     reserv_time = models.DateTimeField()
+    class time_detail(models.IntegerChoices):
+        time_1=1
+        time_2=2
+        time_3=3
+        time_4=4
+        time_5=5
+    reserv_time_detail=models.IntegerField(choices=time_detail.choices,null=True)
     person_num = models.PositiveIntegerField()
     
 
@@ -89,6 +96,20 @@ class Review(models.Model):
     review_img = models.ImageField(default='media/default_tour.jpg')
     Satisfaction = models.PositiveIntegerField()
 
-
+class ReservOneday(models.Model):
+    oneday_table_id = models.AutoField(primary_key=True)
+    tour_name = models.ForeignKey(
+        Tour,
+        related_name="tour_reserv_info", 
+        on_delete=models.CASCADE, 
+        to_field="tour_name", 
+        )
+    reserv_time=models.DateTimeField()
+    tour_limit_person=models.PositiveIntegerField(null=True)
+    time_1=models.PositiveIntegerField(default=0)
+    time_2=models.PositiveIntegerField(default=0)
+    time_3=models.PositiveIntegerField(default=0)
+    time_4=models.PositiveIntegerField(default=0)
+    time_5=models.PositiveIntegerField(default=0)
 
 

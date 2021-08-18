@@ -4,6 +4,7 @@ from backend_api.views import (
     TourViewsets,
     ReviewViewsets,
     ReservViewsets,
+    # ReservOnedayViewsets,
 )
 
 router = DefaultRouter()
@@ -12,6 +13,7 @@ router = DefaultRouter()
 router.register(r'Tour',TourViewsets)
 router.register(r'Review',ReviewViewsets)
 router.register(r'Reserv',ReservViewsets)
+# router.register(r'ReservOneday',ReservOnedayViewsets)
 
 urlpatterns = [
     path(r'', include(router.urls)),
