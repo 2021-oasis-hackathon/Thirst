@@ -18,6 +18,8 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import axios from 'axios';
 import getDate from '../../getDate';
 
+import {url} from '../../url';
+
 const {width, height} = Dimensions.get('window');
 
 const fiveHeart = [1, 2, 3, 4, 5];
@@ -27,35 +29,47 @@ function ReviewWriter({navigation, route}) {
   const [title, setTitle] = useState('');
   const [comment, setComment] = useState('');
 
+  const [photo, setPhoto] = useState(null);
   const [uri, setUri] = useState(null);
   const [check, setCheck] = useState(false);
 
   const [heart, setHeart] = useState(0);
 
-  const info = route.params.info;
-  useEffect(() => {
-    // console.log(route.params);
-  }, []);
+  const tour = route.params.tour;
+  useEffect(() => {}, []);
 
   const onSubmit = () => {
     let body = new FormData();
-    body.append('user', user.username);
-    body.append('tour', info.tour_id);
+
+    body.append('tour', route.params.tour);
     body.append('comment', comment);
     body.append('review_title', title);
     body.append('Satisfaction', heart);
 
-    if (uri) body.append('review_img', uri);
-    body.append('time', getDate());
+    if (uri)
+      body.append('review_img', {
+        type: photo.type,
+        uri: uri,
+        name: photo.fileName,
+      });
+
+    console.log(body);
 
     axios
-      .post(`${url}/api/Review`, body, {
+      .post(`${url}/Review/`, body, {
         headers: {
-          Authorization: user.token.access,
+          Authorization: `Bearer ${user.token.access}`,
         },
       })
       .then(res => {
-        Alert.alert('후기 등록 완료!');
+        Alert.alert('예약 완료!', '감사합니다.', [
+          {
+            text: '확인',
+            onPress: () => {
+              navigation.navigate('MyReservation');
+            },
+          },
+        ]);
       })
       .catch(err => {
         console.log(err);
@@ -68,15 +82,15 @@ function ReviewWriter({navigation, route}) {
     };
 
     const photos = launchImageLibrary(options, res => {
-      console.log(res);
       if (!res.didCancel) {
+        setPhoto(res.assets[0]);
         setUri(res.assets[0].uri);
 
         // setPhoto({width:res.width, height:res.height});
       }
     });
   };
-  console.log(uri);
+
   return (
     <View style={styles.container}>
       <View style={[style.row, style.header]}>
@@ -160,11 +174,8 @@ function ReviewWriter({navigation, route}) {
         </Text>
       </View>
 
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText} onPress={onSubmit}>
-          {' '}
-          작성 완료
-        </Text>
+      <TouchableOpacity style={styles.button} onPress={onSubmit}>
+        <Text style={styles.buttonText}> 작성 완료</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
