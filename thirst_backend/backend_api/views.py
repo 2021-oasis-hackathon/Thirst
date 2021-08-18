@@ -167,7 +167,13 @@ class ReservViewsets(viewsets.ModelViewSet):
             # print(reser.person_num)#외래키는 그냥 해당 키 모델로 올라가버림
             Reserv_time=reser.reserv_time
             # print(Reserv_time.strftime('%Y-%m-%d %H:%M'))
-            tempdict={'Reserv_time':Reserv_time.strftime('%Y-%m-%d %H:%M')}
+            Reserv_time_detail=reser.reserv_time_detail
+            Person_num=reser.person_num
+            tempdict={
+                'Reserv_time':Reserv_time.strftime('%Y-%m-%d %H:%M'),
+                'Reserv_time_detail':Reserv_time_detail,
+                'Person_num':Person_num,
+            }
 
             tempdict.update(tourlistser(reser.tour).data)
             ret.append(tempdict)
