@@ -69,8 +69,6 @@ LocaleConfig.defaultLocale = 'fr';
 const {width, height} = Dimensions.get('window');
 
 const MyReservation = ({navigation, route}) => {
-  const today = getDate().split(' ')[0];
-
   const user = useSelector(state => state.user);
   const [reservList, setReservList] = useState(null);
   const [markedList, setMarkedList] = useState(null);
@@ -105,6 +103,13 @@ const MyReservation = ({navigation, route}) => {
         //  console.log(res.data);
         if (res.data) sortList(res.data);
         let marked = {};
+        let date = new Date();
+        let today = `${date.getFullYear()}-`;
+        today += String(date.getMonth() + 1).padStart(2, '0');
+        today += '-';
+        today += String(date.getDate()).padStart(2, '0');
+
+        console.log(today);
         marked[today] = {selected: true, selectedColor: '#94AF23'};
         for (let i = 0; i < res.data.length; i++) {
           let data = res.data[i];
@@ -131,7 +136,7 @@ const MyReservation = ({navigation, route}) => {
     getList();
   }, []);
 
-  if (reservList && today)
+  if (reservList)
     return (
       <View style={styles.container}>
         <View style={styles.my_res}>
@@ -194,7 +199,7 @@ const MyReservation = ({navigation, route}) => {
                   </Text>
 
                   <Text style={styles.res_info}>
-                    {times[value.Reserv_time_detail]} {'\n'}
+                    {times[value.Reserv_time_detail - 1]} {'\n'}
                     {value.tour_name} {'\n'}
                     {value.tour_addr} {'\n'}
                     {value.Person_num}{' '}

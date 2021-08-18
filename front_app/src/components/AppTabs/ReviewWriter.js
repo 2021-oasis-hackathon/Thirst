@@ -62,7 +62,7 @@ function ReviewWriter({navigation, route}) {
         },
       })
       .then(res => {
-        Alert.alert('예약 완료!', '감사합니다.', [
+        Alert.alert('후기 등록 완료', '감사합니다. 다음에 또 봐요🤗', [
           {
             text: '확인',
             onPress: () => {

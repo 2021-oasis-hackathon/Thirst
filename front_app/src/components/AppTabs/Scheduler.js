@@ -61,13 +61,16 @@ function Scheduler({navigation, route}) {
   };
 
   const sortItems = select => {
+    setLoading(true);
     let keys = Object.keys(select);
 
     keys.sort();
     let sortedList = {};
     for (let i = 0; i < keys.length; i++) sortedList[keys[i]] = select[keys[i]];
 
-    setSelectList(sortedList);
+    setSelectList({...sortedList});
+
+    setLoading(false);
   };
 
   const getSchedule = async (year, date) => {
@@ -83,14 +86,9 @@ function Scheduler({navigation, route}) {
         },
       })
       .then(res => {
-        if (res.data) {
-          // let dates = {...dateList};
-          // dates[key] = {
-          //   date: key,
-          //   data: res.data,
-          //   checked: true,
-          //   day: dayArray[day],
-          // };
+        if (res.data === 'wrong val') {
+          getSchedule(year, date);
+        } else {
           let new_select = selectList;
           let data = res.data[0];
 
@@ -137,16 +135,17 @@ function Scheduler({navigation, route}) {
         checked: i < 4,
       };
       if (date == 31) {
+        month = month + 1;
         date = 1;
-        month = 31;
-      }
-      date += 1;
+      } else date = date + 1;
       day = (day + 1) % 7;
     }
 
     setDateList(datas);
     // setSelectList(select);
     setLoading(false);
+
+    // setTimeout(() => {}, 1000);
   };
 
   useEffect(() => {
@@ -154,10 +153,12 @@ function Scheduler({navigation, route}) {
   }, []);
 
   useEffect(() => {
-    setInit(true);
-  }, [dateList]);
+    if (!init && Object.keys(selectList).length === 4) {
+      setInit(true);
+    }
+  }, [selectList]);
 
-  if (!dateList && !init) return <Loading />;
+  if (!dateList || !init) return <Loading />;
   else
     return (
       <View style={styles.container}>

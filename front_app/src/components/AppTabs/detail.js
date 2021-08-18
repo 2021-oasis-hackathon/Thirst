@@ -56,7 +56,6 @@ function Detail({navigation, route}) {
         },
       })
       .then(res => {
-        console.log(res.data);
         if (res.data) setReviews(res.data);
       })
       .catch(err => {
@@ -82,7 +81,8 @@ function Detail({navigation, route}) {
           <View style={styles.tour}>
             <View style={[styles.column, {marginBottom: 5}]}>
               <Text style={styles.tour_name}>{info.tour_name}</Text>
-              <View style={[styles.row, {alignItems: 'center'}]}>
+              <View
+                style={[styles.row, {alignItems: 'center', marginBottom: 5}]}>
                 <TouchableOpacity style={styles.photoChanger}>
                   <Text style={styles.photoText}> {'<'} </Text>
                 </TouchableOpacity>
@@ -104,8 +104,8 @@ function Detail({navigation, route}) {
                 </View>
                 <View style={styles.column}>
                   <Text style={styles.desc}>
-                    {info.start_time.split('T')[0]}~
-                    {info.end_time.split('T')[0]}
+                    {info.start_time.split(' ')[0]}~
+                    {info.end_time.split(' ')[0]}
                   </Text>
 
                   <Text style={styles.desc}>{info.tour_addr}</Text>
@@ -138,7 +138,7 @@ function Detail({navigation, route}) {
               <Review
                 name={i.user}
                 comments={i.comment}
-                date={i.time.split('T')[0]}
+                date={i.time.split(' ')[0]}
                 satisfaction={i.Satisfaction}
                 key={num}
                 img={i.review_img}
@@ -181,6 +181,7 @@ const styles = StyleSheet.create({
     borderColor: '#E9E9E9',
     borderWidth: 1,
     padding: 20,
+    paddingBottom: 0,
     marginTop: 5,
     marginBottom: 10,
     alignItems: 'center',

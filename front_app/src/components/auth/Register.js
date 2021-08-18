@@ -47,7 +47,6 @@ const Register = ({navigation}) => {
       await axios
         .post(`${url}/user/User/double_check/`, body)
         .then(res => {
-          console.log(res.data);
           if (res.data === 'ok') {
             Alert.alert('사용 가능한 아이디입니다.');
             setIdCheck(true);

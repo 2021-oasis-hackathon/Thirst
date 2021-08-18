@@ -30,7 +30,6 @@ function Today({navigation, route}) {
         },
       })
       .then(res => {
-        console.log(res.data);
         setList(res.data);
       })
       .catch(err => {
@@ -55,43 +54,51 @@ function Today({navigation, route}) {
           showsHorizontalScrollIndicator={false}>
           {list.map((item, index) => {
             return (
-              <View key={index} style={styles.review}>
-                <View style={[styles.header, styles.row]}>
-                  <View style={styles.spacebetween}>
+              <TouchableOpacity
+                key={index}
+                onPress={() => {
+                  navigation.navigate('Detail', {tour_name: item.tour});
+                }}>
+                <View style={styles.review}>
+                  <View style={[styles.header, styles.row]}>
+                    <View style={styles.spacebetween}>
+                      <View style={styles.row}>
+                        <Image
+                          source={require('../../assets/bori.png')}
+                          style={styles.icon}
+                        />
+                        <Text style={styles.title}> {item.review_title}</Text>
+                      </View>
+                      <Text style={styles.date}>{item.time.split(' ')[0]}</Text>
+                    </View>
+                    <Text style={styles.date}>{item.date}</Text>
+                  </View>
+                  <View style={styles.column}>
+                    <Image
+                      source={{uri: `${item.review_img}`}}
+                      style={styles.image}
+                    />
                     <View style={styles.row}>
-                      <Image
-                        source={require('../../assets/bori.png')}
-                        style={styles.icon}
-                      />
-                      <Text style={styles.title}> {item.review_title}</Text>
-                    </View>
-                    <Text style={styles.date}>{item.time.split('T')[0]}</Text>
-                  </View>
-                  <Text style={styles.date}>{item.date}</Text>
-                </View>
-                <View style={styles.column}>
-                  <Image
-                    source={{uri: `${item.review_img}`}}
-                    style={styles.image}
-                  />
-                  <View style={styles.row}>
-                    <View style={[styles.column, {marginLeft: 5}]}>
-                      <Text style={styles.bold}>체험장</Text>
-                      <Text style={[styles.bold, {marginTop: 5}]}>만족도</Text>
-                    </View>
-                    <View style={[styles.column, {marginLeft: 10}]}>
-                      <Text style={styles.bold}>{item.tour}</Text>
-                      <Text style={[styles.bold, {marginTop: 5}]}>
-                        {item.Satisfaction}
-                      </Text>
+                      <View style={[styles.column, {marginLeft: 5}]}>
+                        <Text style={styles.bold}>체험장</Text>
+                        <Text style={[styles.bold, {marginTop: 5}]}>
+                          만족도
+                        </Text>
+                      </View>
+                      <View style={[styles.column, {marginLeft: 10}]}>
+                        <Text style={styles.bold}>{item.tour}</Text>
+                        <Text style={[styles.bold, {marginTop: 5}]}>
+                          {item.Satisfaction}
+                        </Text>
+                      </View>
                     </View>
                   </View>
+                  <View style={[styles.contents, styles.column]}>
+                    <Text style={styles.comments}> {item.comment}</Text>
+                    <Text style={styles.writer}> 작성자 {item.user}</Text>
+                  </View>
                 </View>
-                <View style={[styles.contents, styles.column]}>
-                  <Text style={styles.comments}> {item.comment}</Text>
-                  <Text style={styles.writer}> 작성자 {item.user}</Text>
-                </View>
-              </View>
+              </TouchableOpacity>
             );
           })}
         </ScrollView>
