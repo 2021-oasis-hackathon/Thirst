@@ -106,4 +106,4 @@ class FindReservonedaySerializer(serializers.Serializer):
     reserv_time=serializers.DateTimeField()
 
 class ReviewTourSerializer(serializers.Serializer):
-    tour=serializers.IntegerField()
+    tour=serializers.CharField()
