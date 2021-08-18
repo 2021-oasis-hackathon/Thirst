@@ -6,16 +6,13 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
-from rest_framework.exceptions import ValidationError
-from django.core.validators import RegexValidator
 
-def satisfaction_val(val):
-    if val:
-        if 0<val and val<5:
-            return val
-        else:
-            return ValidationError('worng val')
-    return ValidationError('worng val')
+from django.core.validators import RegexValidator
+from thirst_backend.func import (
+    satisfaction_val,
+    tour_image_path,
+    review_image_path,
+)
 
 class DjangoMigrations(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -35,13 +32,16 @@ class Tour(models.Model):
         on_delete=models.CASCADE,
         to_field="username", 
         )
+
+    
+
     tour_name = models.CharField(max_length=50,unique=True)
     tour_desc = models.CharField(max_length=300, blank=True, null=True)
-    tour_img = models.ImageField(default='media/default_tour.jpg')
+    tour_img = models.ImageField(default='media/api_tour/default_tour.jpg',upload_to=tour_image_path)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     tour_addr = models.CharField(max_length=100)
-    tour_phone_num = models.CharField(max_length=12,validators=[RegexValidator(r'^\d{1,10}$')])
+    tour_phone_num = models.CharField(max_length=12,validators=[RegexValidator(r'^\d{1,10}$')],default='00000000000')
     tour_time_at_one = models.PositiveIntegerField()
     tour_person_limit = models.PositiveIntegerField(blank=True, null=True)
     tour_min_person_at_one = models.PositiveIntegerField()
@@ -90,11 +90,12 @@ class Review(models.Model):
         Tour,
         related_name="tour_review", 
         on_delete=models.CASCADE, 
+        to_field="tour_name",
         )
     review_title = models.CharField(max_length=50,null=False)
     comment = models.CharField(max_length=300, blank=True, null=True)
-    time = models.DateTimeField()
-    review_img = models.ImageField(default='media/default_tour.jpg',null=False)
+    time = models.DateTimeField(auto_now_add=True)
+    review_img = models.ImageField(default='media/api_review/default_review.jpg',upload_to=review_image_path)
     Satisfaction = models.PositiveIntegerField()
 
 class ReservOneday(models.Model):
