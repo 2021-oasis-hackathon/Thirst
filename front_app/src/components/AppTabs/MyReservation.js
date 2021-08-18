@@ -16,7 +16,12 @@ import {lgreen} from '../../assets/color';
 import {bold} from '../../assets/font';
 import {useSelector} from 'react-redux';
 
+import getDate from '../../getDate';
+
 import Loading from '../AppTabs/Loading';
+
+import {url} from '../../url';
+import {times} from '../../timeTable';
 
 LocaleConfig.locales['fr'] = {
   monthNames: [
@@ -60,47 +65,58 @@ LocaleConfig.locales['fr'] = {
   today: "Aujourd'hui",
 };
 LocaleConfig.defaultLocale = 'fr';
-const testData = {
-  '8/16': {
-    time: '15:00',
-    location: '농가 마을',
-    phone: '010-0000-0000',
-  },
-  '8/17': {
-    time: '15:10',
-    location: '갯벌 바다',
-    phone: '010-0000-0000',
-  },
-  '8/18': {
-    time: '15:00',
-    location: '갯벌 바다',
-    phone: '010-0000-0000',
-  },
-  '8/19': {
-    time: '15:00',
-    location: '갯벌 바다',
-    phone: '010-0000-0000',
-  },
-};
 
 const {width, height} = Dimensions.get('window');
 
-const MyReservation = ({navigation}) => {
+const MyReservation = ({navigation, route}) => {
+  const today = getDate().split(' ')[0];
+
   const user = useSelector(state => state.user);
   const [reservList, setReservList] = useState(null);
+  const [markedList, setMarkedList] = useState(null);
+
+  const sortList = data => {
+    let obj = {};
+
+    for (let i = 0; i < data.length; i++)
+      obj[
+        `${data[i].Reserv_time}${data[i].Reserv_time_detail}${data[i].tour_name}`
+      ] = data[i];
+
+    let keys = Object.keys(obj);
+
+    keys.sort();
+    let sortedList = {};
+    for (let i = 0; i < keys.length; i++) sortedList[keys[i]] = obj[keys[i]];
+
+    setReservList({...sortedList});
+  };
 
   const getList = async () => {
     let body = new FormData();
     body.append('myname', user.username);
     await axios
-      .post(`${url}/FindMyReserv/`, body, {
+      .post(`${url}/Reserv/FindMyReserv/`, body, {
         headers: {
           Authorization: `Bearer ${user.token.access}`,
         },
       })
       .then(res => {
-        console.log(res.data);
-        if (res.data) setReservList(res.data);
+        //  console.log(res.data);
+        if (res.data) sortList(res.data);
+        let marked = {};
+        marked[today] = {selected: true, selectedColor: '#94AF23'};
+        for (let i = 0; i < res.data.length; i++) {
+          let data = res.data[i];
+          // console.log(data.Reserv_time);
+          marked[data.Reserv_time.split(' ')[0]] = {
+            marked: true,
+            dotColor: '#3D550C',
+          };
+        }
+        //    console.log(marked);
+
+        setMarkedList({...marked});
       })
       .catch(err => {
         console.log('my reservation get error');
@@ -109,9 +125,13 @@ const MyReservation = ({navigation}) => {
 
   useEffect(() => {
     getList();
+  }, [route.params]);
+
+  useEffect(() => {
+    getList();
   }, []);
 
-  if (testData)
+  if (reservList && today)
     return (
       <View style={styles.container}>
         <View style={styles.my_res}>
@@ -133,12 +153,7 @@ const MyReservation = ({navigation}) => {
               firstDay={0}
               //markingType={'period'}
 
-              markedDates={{
-                '2021-08-15': {selected: true, selectedColor: '#94AF23'},
-                '2021-08-16': {marked: true, dotColor: '#3D550C'},
-                '2021-08-17': {marked: true, dotColor: '#3D550C'},
-                '2021-08-18': {marked: true, dotColor: '#3D550C'},
-              }}
+              markedDates={markedList}
               enableSwipeMonths={true}
               style={styles.Calendar}
               theme={{
@@ -152,31 +167,38 @@ const MyReservation = ({navigation}) => {
           <Text style={styles.titleText}>내 예약 현황</Text>
         </View>
         <ScrollView contentContainerStyle={{}}>
-          {Object.entries(testData).map(([key, value]) => {
+          {Object.entries(reservList).map(([key, value]) => {
+            let datetime = value.Reserv_time.split(' ');
+
             return (
               <View style={styles.section} key={key}>
                 <View style={styles.row}>
-                  <Text style={styles.date}>{key}</Text>
+                  <View style={[style.column, {alignItems: 'center'}]}>
+                    <Text style={styles.date}>{datetime[0].substring(5)}</Text>
+                    <TouchableOpacity
+                      style={styles.reviewButton}
+                      onPress={() => {
+                        navigation.navigate('ReviewWriter', {
+                          tour: value.tour_name,
+                        });
+                      }}>
+                      <Text style={styles.reviewText}>후기작성</Text>
+                    </TouchableOpacity>
+                  </View>
 
                   <Text style={styles.res_info}>
                     예약 시간 {'\n'}
-                    운영 장소 {'\n'}
-                    연락처 {'\n'}
+                    체험명 {'\n'}
+                    체험장 {'\n'}
+                    예약 인원 {'\n'}
                   </Text>
 
                   <Text style={styles.res_info}>
-                    {value.time} {'\n'}
-                    {value.location} {'\n'}
-                    {value.phone}
-                    {'\n'}
+                    {times[value.Reserv_time_detail]} {'\n'}
+                    {value.tour_name} {'\n'}
+                    {value.tour_addr} {'\n'}
+                    {value.Person_num}{' '}
                   </Text>
-                  <TouchableOpacity
-                    style={styles.reviewButton}
-                    onPress={() => {
-                      navigation.navigate('ReviewWriter', {id: value.id});
-                    }}>
-                    <Text style={styles.reviewText}>후기작성</Text>
-                  </TouchableOpacity>
                 </View>
               </View>
             );
@@ -250,6 +272,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     margin: 20,
     marginRight: 10,
+    marginBottom: 5,
     fontWeight: 'bold',
   },
   res_info: {
@@ -268,13 +291,15 @@ const styles = StyleSheet.create({
   reviewButton: {
     backgroundColor: lgreen,
     borderRadius: 10,
-    marginLeft: 5,
-    height: 25,
-    top: 60,
+    width: 50,
+    height: 50,
+    top: 10,
+    justifyContent: 'center',
   },
   reviewText: {
     fontFamily: bold,
     color: 'white',
     margin: 5,
+    textAlign: 'center',
   },
 });
