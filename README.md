@@ -23,15 +23,15 @@
 <h3 align='center'>농촌 활성화 서비스 '촌스러운'을 구상하게 되었다.</h4>
 
 ## 주요 기능
-### 1. 쉽게
+### 💚 쉽게
 - 실시간 잔여석 확인
 - 실시간 예약 서비스
 - 지역별, 테마별 농촌 체험장 정보
 
-### 2. 새롭게
+### 💚 새롭게
 - '오늘의 발견' 농촌 체험 발굴
 
-### 3. 함께
+### 💚 함께
 - 농촌 활성화
 - 빈집 문제 해결
 - 사용자들과 리뷰 공유
@@ -40,6 +40,8 @@
 
 
 ## 기술스택
+![KakaoTalk_20210819_050110695](https://user-images.githubusercontent.com/37640219/129989566-a968806c-1e92-427b-a8fd-18de04564eb7.png)
+
 - FrontEnd: React-Native, Redux, hooks
 - BackEnd: Django, Django Rest Framework, SQLite
 - async communication: Axios
